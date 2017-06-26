@@ -1,0 +1,21 @@
+{
+  "name": "spoopy.link",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devsnek/spoopy.link.git"
+  },
+  "author": "snek <me@gus.host>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/devsnek/spoopy.link/issues"
+  },
+  "homepage": "https://github.com/devsnek/spoopy.link#readme"
+}
