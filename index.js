@@ -28,16 +28,18 @@ http.createServer((req, res) => {
   redirects(suspect.href)
     .then((trail) => {
       let safe = trail.length < 5;
+      let fail = 0;
       if (safe) {
-        for (const hmm of trail) {
-          if (blacklist.includes(new URL(hmm).hostname)) {
+        for (let i = 0; i < trail.length; i++) {
+          if (blacklist.includes(new URL(trail[i]).hostname)) {
             safe = false;
+            fail = i;
             break;
           }
         }
       }
-      res.end({ trail, safe });
-      console.log(`Scanned ${suspect.href} ... safe=${safe}`);
+      res.end({ trail, safe, fail });
+      console.log(`Scanned ${suspect.href} ... safe=${safe}, fail=${fail}`);
     })
     .catch((e) => {
       console.error(e);
