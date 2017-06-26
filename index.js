@@ -48,7 +48,7 @@ function getFinal(url) {
 }
 
 http.createServer((req, res) => {
-  const discord = req.headers['user-agent'].includes('discordbot');
+  const discord = req.headers['user-agent'].toLowerCase().includes('discordbot');
 
   if (!req.url.startsWith('/json') && !discord) return res.end(index);
 
