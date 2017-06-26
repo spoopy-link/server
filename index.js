@@ -10,7 +10,7 @@ const index = fs.readFileSync('./index.html');
 
 const ticks = {
   green: 'https://cdn.discordapp.com/emojis/318902154054205460.png',
-  red: 'https://cdn.discordapp.com/emojis/318902154054205460.png',
+  red: 'https://cdn.discordapp.com/emojis/312314733816709120.png',
 };
 
 http.ServerResponse.prototype._end = http.ServerResponse.prototype.end;
