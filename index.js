@@ -6,6 +6,8 @@ const redirects = require('./redirects');
 const blacklist = fs.readFileSync('./blacklist')
   .toString().split('\n').filter(x => x);
 
+const index = fs.readFileSync('./index.html');
+
 http.ServerResponse.prototype._end = http.ServerResponse.prototype.end;
 http.ServerResponse.prototype.end = function(...args) {
   if (args.length === 1 && typeof args[0] === 'number') {
@@ -23,7 +25,8 @@ http.ServerResponse.prototype.end = function(...args) {
 };
 
 http.createServer((req, res) => {
-  let suspect = new URL(req.url.slice(1));
+  if (!req.url.startsWith('/json')) return res.end(index);
+  let suspect = new URL(req.url.slice(6));
   if (!suspect || !suspect.href) return res.end(400, { message: 'invalid url' });
   redirects(suspect.href)
     .then((trail) => {
