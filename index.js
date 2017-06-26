@@ -1,12 +1,22 @@
 const fs = require('fs');
 const http = require('http');
+const https = require('https');
 const URL = require('./url');
 const redirects = require('./redirects');
+const { createPromise, promiseResolve } = process.binding('util');
+
+(async function() {
 
 const blacklist = fs.readFileSync('./blacklist')
   .toString().split('\n').filter(x => x);
 
-const index = fs.readFileSync('./index.html');
+const indexPromise = createPromise();
+https.get('https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages/404.html', (res) => {
+  const chunks = [];
+  res.on('data', chunk => chunks.push(chunk));
+  res.on('end', () => promiseResolve(indexPromise, Buffer.concat(chunks).toString()));
+});
+const index = await indexPromise;
 
 const ticks = {
   green: 'https://cdn.discordapp.com/emojis/318902154054205460.png',
@@ -82,3 +92,5 @@ http.createServer((req, res) => {
       res.end(500);
     });
 }).listen(5000);
+
+}());
