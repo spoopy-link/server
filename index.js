@@ -27,17 +27,17 @@ http.createServer((req, res) => {
   if (!suspect || !suspect.href) return res.end(400, { message: 'invalid url' });
   redirects(suspect.href)
     .then((trail) => {
-      let rating = trail.length < 5 ? 'safe' : 'unsafe';
-      if (rating === 'safe') {
+      let safe = trail.length < 5;
+      if (safe) {
         for (const hmm of trail) {
           if (blacklist.includes(new URL(hmm).hostname)) {
-            rating = 'unsafe';
+            safe = false;
             break;
           }
         }
       }
-      res.end({ trail, rating });
-      console.log(`Scanned ${suspect.href} ... ${rating}`);
+      res.end({ trail, safe });
+      console.log(`Scanned ${suspect.href} ... safe=${safe}`);
     })
     .catch((e) => {
       console.error(e);
