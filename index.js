@@ -68,7 +68,12 @@ http.createServer((req, res) => {
 </head>
 </html>`);
       } else {
-        res.end(output);
+        res.writeHead(200, {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET',
+          'Content-Type': 'application/json',
+        });
+        res.end(JSON.stringify(output));
       }
       console.log(`Scanned ${suspect.href} ... safe=${output.safe}, fail=${output.fail}`);
     })
