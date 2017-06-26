@@ -1,7 +1,10 @@
+const fs = require('fs');
 const http = require('http');
 const URL = require('./url');
 const redirects = require('./redirects');
-const blacklist = require('./blacklist');
+
+const blacklist = fs.readFileSync('./blacklist')
+  .toString().split('\n').filter(x => x);
 
 http.ServerResponse.prototype._end = http.ServerResponse.prototype.end;
 http.ServerResponse.prototype.end = function(...args) {
