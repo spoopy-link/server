@@ -17,3 +17,8 @@ exports.CORS_ORIGINS = [
   'http://gus.host',
   'https://gus.host',
 ];
+
+exports.REASONS = {
+  SPOOPY_LINK: 'Redirect trail contains a spoopy link',
+  TOO_MANY: 'Too many redirects, could be spoopy',
+};

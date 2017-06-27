@@ -75,19 +75,23 @@ function getFinal(url) {
   url = url.replace(/(https?):\/([^\/])/, (_, protocol, x) => `${protocol}://${x}`);
   return redirects(url)
     .then((trail) => {
-      let safe = trail.length < Constants.MAX_REDIRECTS;
+      let reasons = [];
+      let safe = true;
       let fail = 0;
-      if (safe) {
-        for (let i = 0; i < trail.length; i++) {
-          if (blacklist.includes(new URL(trail[i]).hostname)) {
-            safe = false;
-            fail = i;
-            break;
-          }
+      if (trail.length < Constants.MAX_REDIRECTS) {
+        reasons.push(Consants.REASONS.TOO_MANY);
+        safe = false;
+      }
+      for (let i = 0; i < trail.length; i++) {
+        if (blacklist.includes(new URL(trail[i]).hostname)) {
+          safe = false;
+          fail = i;
+          reasons.push(Constants.REASONS.SPOOPY_LINK);
+          break;
         }
       }
       console.log(`Scanned ${trail[0]} ... safe=${safe}, fail=${fail}`);
-      return { trail, safe, fail };
+      return { trail, safe, fail, reasons };
     })
     .catch(console.error);
 }
