@@ -7,7 +7,7 @@ exports.TICKS = {
 
 exports.SERVER_PORT = 5000;
 
-exports.UA_REGEX = /DiscordBot/i;
+exports.UA_REGEX = /(Discord|Slack)Bot/i;
 
 exports.CORS_ORIGINS = [
   'http://spoopy.link',

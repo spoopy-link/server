@@ -7,8 +7,8 @@ class Router {
     this.routes = [];
   }
 
-  handleRequest(req, res) {
-    for (const usable of this.usables) usable(req, res);
+  async handleRequest(req, res) {
+    await Promise.all(this.usables.map(u => new Promise(r => u(req, res, r))));
     for (const route of this.routes) {
       const match = route.route.test(req.url);
       if (!match) continue;

@@ -8,7 +8,7 @@ http.ServerResponse.prototype.end = function(...args) {
   } else if (args.length === 2 && typeof args[0] === 'number' && args[1].constructor === Object) {
     this.writeHead(args[0], { 'Content-Type': 'application/json' });
     end.call(this, JSON.stringify(args[1]));
-  } else if (args[0].constructor === Object) {
+  } else if (args[0] && args[0].constructor === Object) {
     this.writeHead(200, { 'Content-Type': 'application/json' });
     end.call(this, JSON.stringify(args[0]));
   } else {
@@ -21,6 +21,6 @@ http.ServerResponse.prototype.status = function(code) {
   return this;
 };
 
-http.ServerResponse.prototype.headers = function headers(obj) {
+http.ServerResponse.prototype.setHeaders = function headers(obj) {
   for (const [name, value] of Object.entries(obj)) this.setHeader(name, value);
 };

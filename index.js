@@ -2,10 +2,11 @@ const fs = require('fs');
 const http = require('http');
 const URL = require('./util/url');
 const redirects = require('./util/redirects');
-const get = require('./util/get');
+const request = require('snekfetch');
 const Router = require('./server/Router');
 const Constants = require('./Constants');
 const serializers = require('./serializers');
+const querystring = require('querystring');
 
 const blacklist = fs.readFileSync('./blacklist.txt')
   .toString().split('\n')
@@ -13,32 +14,39 @@ const blacklist = fs.readFileSync('./blacklist.txt')
 
 (async function() {
   const pages = {
-    index: await get('https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages/index.html').then(r => r.text),
-    spoopy: await get('https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages/404.html').then(r => r.text),
+    index: await request.get('https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages/index.html').then(r => r.text),
+    spoopy: await request.get('https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages/404.html').then(r => r.text),
   };
 
   const server = http.createServer();
   const router = new Router(server);
 
-  router.use((req, res) => {
+  router.use((req, res, next) => {
     req.needsOG = Constants.UA_REGEX.test(req.headers['user-agent']);
-    if (!Constants.CORS_ORIGINS.includes(req.headers['origin'])) return;
-    res.headers({
-      'Access-Control-Allow-Origin': req.headers['origin'],
-      'Access-Control-Allow-Methods': '*',
-      'Access-Control-Allow-Headers': '*',
+    if (Constants.CORS_ORIGINS.includes(req.headers['origin'])) {
+      res.setHeaders({
+        'Access-Control-Allow-Origin': req.headers['origin'],
+        'Access-Control-Allow-Methods': '*',
+        'Access-Control-Allow-Headers': '*',
+      });
+    }
+    const chunks = [];
+    req.on('data', c=> chunks.push(c));
+    req.on('end', () => {
+      req.body = Buffer.concat(chunks).toString();
+      next();
     });
   });
 
   router.get(/\/$/, (req, res) => {
-    res.headers({ 'Content-Type': 'text/html' });
+    res.setHeader('Content-Type', 'text/html');
     res.end(pages.index);
   });
 
   router.get(/\/json\/.+/, (req, res) => {
     getFinal(req.url.replace('/json/', ''))
     .then((output) => {
-      res.headers({ 'Content-Type': 'application/json' });
+      res.setHeader('Content-Type', 'application/json');
       res.end(serializers.raw(output));
     })
     .catch((err) => {
@@ -47,11 +55,28 @@ const blacklist = fs.readFileSync('./blacklist.txt')
     });
   });
 
+  router.get(/\/slack/, (req, res) => {
+    const body = querystring.parse(req.body);
+
+    getFinal(body.text.replace(/<|>/g, ''))
+    .then((output) => {
+      res.end(200);
+      request.post(body.response_url)
+        .send(serializers.slack(output))
+        .end();
+    })
+    .catch((err) => {
+      res.status(500).end();
+      console.error(err);
+    });
+
+  });
+
   router.get(/\/(https?).+/, (req, res) => {
     if (req.needsOG) {
       getFinal(req.url.slice(1))
       .then((output) => {
-        res.headers({ 'Content-Type': 'text/html' });
+        res.setHeader('Content-Type', 'text/html');
         res.end(serializers.og(output));
       })
       .catch((err) => {
@@ -95,3 +120,5 @@ function getFinal(url) {
     })
     .catch(console.error);
 }
+
+process.on('unhandledRejection', console.error);
