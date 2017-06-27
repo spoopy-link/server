@@ -17,7 +17,7 @@ module.exports = {
       title: `spoopy.link (${result.trail[0]})`,
       title_link: `https://spoopy.link/${result.trail[0]}`,
       text: `${result.safe ? 'Safe' : 'Unsafe'} link! Trail: ${result.trail.join(' -> ')}`,
-      image_url: result.safe ? TICKS.green : TICKS.red,
+      footer_icon: result.safe ? TICKS.green : TICKS.red,
       footer: 'spoopy.link',
       ts: Date.now(),
     }],
