@@ -78,8 +78,8 @@ function getFinal(url) {
       let reasons = [];
       let safe = true;
       let fail = 0;
-      if (trail.length < Constants.MAX_REDIRECTS) {
-        reasons.push(Consants.REASONS.TOO_MANY);
+      if (trail.length > Constants.MAX_REDIRECTS) {
+        reasons.push(Constants.REASONS.TOO_MANY);
         safe = false;
       }
       for (let i = 0; i < trail.length; i++) {
