@@ -10,7 +10,10 @@ exports.SERVER_PORT = 5000;
 exports.UA_REGEX = /DiscordBot/i;
 
 exports.CORS_ORIGINS = [
-  'spoopy.link',
-  'spoopy-link.now.sh',
-  'gus.host',
+  'http://spoopy.link',
+  'https://spoopy.link',
+  'http://spoopy-link.now.sh',
+  'https://spoopy-link.now.sh',
+  'http://gus.host',
+  'https://gus.host',
 ];
