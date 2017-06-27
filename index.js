@@ -74,11 +74,7 @@ const blacklist = fs.readFileSync('./blacklist.txt')
 
 function getFinal(url) {
   // fuck discord
-  if (/https:\/[^\/]/.test(url)) {
-    url = url.replace('https:/', 'https://');
-  } else if (/http:\/[^\/]/.test(url)) {
-    url  = url.replace('http:/', 'http://');
-  }
+  url = url.replace(/(https?):\/([^\/])/, (_, protocol, x) => `${protocol}://${x}`);
   return redirects(url)
     .then((trail) => {
       let safe = trail.length < Constants.MAX_REDIRECTS;
