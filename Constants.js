@@ -8,3 +8,9 @@ exports.TICKS = {
 exports.SERVER_PORT = 5000;
 
 exports.UA_REGEX = /DiscordBot/i;
+
+exports.CORS_ORIGINS = [
+  'spoopy.link',
+  'spoopy-link.now.sh',
+  'gus.host',
+];

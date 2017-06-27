@@ -22,8 +22,11 @@ const blacklist = fs.readFileSync('./blacklist.txt')
 
   router.use((req, res) => {
     req.needsOG = Constants.UA_REGEX.test(req.headers['user-agent']);
+    const origin = new URL(req.headers['origin']);
+    if (!origin.hostname) return;
+    if (!Constants.CORS_ORIGINS.includes(origin.hostname)) return;
     res.headers({
-      'Access-Control-Allow-Origin': 'spoopy.link spoopy-link.now.sh gus.host',
+      'Access-Control-Allow-Origin': origin.hostname,
       'Access-Control-Allow-Methods': '*',
       'Access-Control-Allow-Headers': '*',
     });
