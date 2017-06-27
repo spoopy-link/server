@@ -46,7 +46,7 @@ const blacklist = fs.readFileSync('./blacklist.txt')
     });
   });
 
-  router.get(/\/.+/, (req, res) => {
+  router.get(/\/(https?).+/, (req, res) => {
     if (req.needsOG) {
       getFinal(req.url.slice(1))
       .then((output) => {
@@ -60,6 +60,10 @@ const blacklist = fs.readFileSync('./blacklist.txt')
     } else {
       res.end(pages.spoopy);
     }
+  });
+
+  router.get(/.+/, (req, res) => {
+    res.status(404).end('404 m8');
   });
 
   server.listen(Constants.SERVER_PORT);
@@ -81,5 +85,6 @@ function getFinal(url) {
       }
       console.log(`Scanned ${trail[0]} ... safe=${safe}, fail=${fail}`);
       return { trail, safe, fail };
-    });
+    })
+    .catch(console.error);
 }
