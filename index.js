@@ -102,7 +102,7 @@ router.get(/\/(https?).+/, (req, res) => {
         console.error(err);
       });
     } else {
-      res.end(pages.spoopy);
+      webCache.get('spoopy').then(t => res.end(t));
     }
 });
 
