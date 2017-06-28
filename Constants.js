@@ -29,3 +29,16 @@ exports.OAUTH = {
   redirect_uri: 'https://spoopy.link/slack/callback',
   scope: 'commands',
 };
+
+exports.PAGES = {
+  index: '/index.html',
+  spoopy: '/404.html',
+  slack_privacy: '/slack/privacy.html',
+  slack_support: '/slack/support.html',
+  slack_callback: '/slack/callback.html',
+  css: '/main.css',
+  js: '/main.js',
+};
+
+exports.GH_ROOT = 'https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages';
+
