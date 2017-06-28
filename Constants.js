@@ -12,8 +12,6 @@ exports.UA_REGEX = /(Discord|Slack)Bot/i;
 exports.CORS_ORIGINS = [
   'http://spoopy.link',
   'https://spoopy.link',
-  'http://spoopy-link.now.sh',
-  'https://spoopy-link.now.sh',
   'http://gus.host',
   'https://gus.host',
 ];
