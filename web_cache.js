@@ -7,6 +7,6 @@ const cache = new TimedCache(9e5, (item) => request.get(`${GH_ROOT}${PAGES[item]
   .catch(() => SERVER_404_MESSAGE)
 );
 
-cache.on('get', console.log);
+// cache.on('get', console.log);
 
 module.exports = cache;

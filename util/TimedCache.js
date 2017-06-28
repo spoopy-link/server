@@ -1,8 +1,9 @@
-const EventEmitter = require('events');
+// const EventEmitter = require('events');
 
-class TimedCache extends EventEmitter {
+// class TimedCache extends EventEmitter {
+class TimedCache {
   constructor(time, getter) {
-    super();
+    // super();
     this.time = time;
     this._cache = {};
     this._getter = getter;
@@ -10,10 +11,10 @@ class TimedCache extends EventEmitter {
 
   get(item) {
     if (this._cache[item] && Date.now() - this._cache[item].time < this.time) {
-      this.emit('get', item, true);
+      // this.emit('get', item, true);
       return Promise.resolve(this._cache[item].data);
     } else {
-      this.emit('get', item, false);
+      // this.emit('get', item, false);
       return this._getter(item).then((data) => {
         this._cache[item] = { time: Date.now(), data };
         return data;
