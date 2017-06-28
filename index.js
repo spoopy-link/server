@@ -35,6 +35,11 @@ const blacklist = fs.readFileSync('./blacklist.txt')
         'Access-Control-Allow-Headers': '*',
       });
     }
+
+    const [path, query] = req.url.split('?');
+    req.url = path;
+    req.query = query ? querystring.parse(query) : {};
+
     const chunks = [];
     req.on('data', c => chunks.push(c));
     req.on('end', () => {
