@@ -14,8 +14,10 @@ const blacklist = fs.readFileSync('./blacklist.txt')
 
 (async function() {
   const pages = {
-    index: await request.get('https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages/index.html').then(r => r.text),
-    spoopy: await request.get('https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages/404.html').then(r => r.text),
+    index: await request.get('https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages/index.html')
+      .then(r => r.text),
+    spoopy: await request.get('https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages/404.html')
+      .then(r => r.text),
   };
 
   const server = http.createServer();
@@ -23,15 +25,15 @@ const blacklist = fs.readFileSync('./blacklist.txt')
 
   router.use((req, res, next) => {
     req.needsOG = Constants.UA_REGEX.test(req.headers['user-agent']);
-    if (Constants.CORS_ORIGINS.includes(req.headers['origin'])) {
+    if (Constants.CORS_ORIGINS.includes(req.headers.origin)) {
       res.setHeaders({
-        'Access-Control-Allow-Origin': req.headers['origin'],
+        'Access-Control-Allow-Origin': req.headers.origin,
         'Access-Control-Allow-Methods': '*',
         'Access-Control-Allow-Headers': '*',
       });
     }
     const chunks = [];
-    req.on('data', c=> chunks.push(c));
+    req.on('data', c => chunks.push(c));
     req.on('end', () => {
       req.body = Buffer.concat(chunks).toString();
       next();
@@ -69,7 +71,6 @@ const blacklist = fs.readFileSync('./blacklist.txt')
       res.status(500).end();
       console.error(err);
     });
-
   });
 
   router.get(/\/(https?).+/, (req, res) => {
@@ -97,7 +98,7 @@ const blacklist = fs.readFileSync('./blacklist.txt')
 
 function getFinal(url) {
   // fuck discord
-  url = url.replace(/(https?):\/([^\/])/, (_, protocol, x) => `${protocol}://${x}`);
+  url = url.replace(/(https?):\/([^/])/, (_, protocol, x) => `${protocol}://${x}`);
   return redirects(url)
     .then((trail) => {
       let reasons = [];
