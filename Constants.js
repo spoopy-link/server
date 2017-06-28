@@ -20,3 +20,9 @@ exports.REASONS = {
   SPOOPY_LINK: 'Redirect trail contains a spoopy link',
   TOO_MANY: 'Too many redirects, could be spoopy',
 };
+
+exports.OAUTH = {
+  client_id: '203897278339.204022634292',
+  redirect_uri: 'https://spoopy.link/slack/callback',
+  scope: 'commands',
+};

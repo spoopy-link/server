@@ -9,8 +9,10 @@ class Router {
 
   async handleRequest(req, res) {
     await Promise.all(this.usables.map(u => new Promise(r => u(req, res, r))));
-    for (const route of this.routes) {
-      const match = route.route.test(req.url);
+    for (const route of this.routes.filter(r => r.method === req.method)) {
+      const match = typeof route.route === 'string' ?
+        route.route === req.url :
+        route.route.test(req.url);
       if (!match) continue;
       route.handler(req, res);
       break;
@@ -20,13 +22,16 @@ class Router {
   use(handler) {
     this.usables.push(handler);
   }
+}
 
-  get(regex, handler) {
+for (const method of ['GET', 'POST']) {
+  Router.prototype[method.toLowerCase()] = function(regex, handler) {
     this.routes.push({
       route: regex,
       handler,
+      method,
     });
-  }
+  };
 }
 
 module.exports = Router;
