@@ -1,9 +1,11 @@
-const URL = require('url').URL;
+const URL = require('url');
 
 module.exports = function(url) {
   try {
-    return new URL(url);
+    return new URL.URL(url);
   } catch (err) {
     return null;
   }
-}
+};
+
+module.exports.resolve = URL.resolve;

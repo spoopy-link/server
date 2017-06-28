@@ -19,7 +19,10 @@ function redirects(url, last) {
     try {
       const request = (url.startsWith('https') ? https : http).get(url, (res) => {
         if ([300, 301, 302, 303].includes(res.statusCode)) {
-          redirects(res.headers.location, last);
+          const newURL = /^https?:\/\//i.test(res.headers.location) ?
+            res.headers.location :
+            URL.resolve(url, res.headers.location);
+          redirects(newURL, last);
         } else {
           promiseResolve(last.promise, last.urls);
         }
