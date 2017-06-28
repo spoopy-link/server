@@ -106,6 +106,16 @@ router.get(/\/(https?).+/, (req, res) => {
     }
 });
 
+router.get('/main.css', (req, res) => {
+  res.setHeader('Content-Type', 'text/css');
+  webCache.get('css').then(t => res.end(t));
+});
+
+router.get('/main.js', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  webCache.get('js').then(t => res.end(t));
+});
+
 router.get(/.+/, (req, res) => {
   res.status(404).end(Constants.SERVER_404_MESSAGE);
 });
