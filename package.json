@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "parse5": "^3.0.2",
     "snekfetch": "^3.1.11"
   },
   "devDependencies": {},

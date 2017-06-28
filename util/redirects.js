@@ -3,6 +3,7 @@ const https = require('https');
 const URL = require('./url');
 const { createPromise, promiseResolve, promiseReject } = process.binding('util');
 const Constants = require('../Constants');
+const metaRefresh = require('./meta_refresh');
 
 function redirects(url, last) {
   if (!new URL(url)) return Promise.reject(new Error('invalid url'));
@@ -24,7 +25,25 @@ function redirects(url, last) {
             URL.resolve(url, res.headers.location);
           redirects(newURL, last);
         } else {
-          promiseResolve(last.promise, last.urls);
+          let done = false;
+          const chunks = [];
+          res.on('data', chunk => chunks.push(chunk));
+
+          const finish = () => {
+            promiseResolve(last.promise, last.urls);
+            done = true;
+          };
+          const timeout = setTimeout(finish, 750);
+          res.on('end', () => {
+            if (done) return;
+            clearTimeout(timeout);
+            const meta = metaRefresh(Buffer.concat(chunks).toString());
+            if (meta && meta.url) {
+              redirects(meta.url, last);
+            } else {
+              finish();
+            }
+          });
         }
       });
       request.on('error', (err) => {
