@@ -17,12 +17,15 @@ function redirects(url, last) {
     promiseResolve(last.promise, last.urls);
   } else {
     try {
-      (url.startsWith('https') ? https : http).get(url, (res) => {
+      const request = (url.startsWith('https') ? https : http).get(url, (res) => {
         if ([300, 301, 302, 303].includes(res.statusCode)) {
           redirects(res.headers.location, last);
         } else {
           promiseResolve(last.promise, last.urls);
         }
+      });
+      request.on('error', (err) => {
+        promiseReject(last.promise, err);
       });
     } catch (err) {
       console.error('INVALID URL', url);

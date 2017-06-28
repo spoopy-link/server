@@ -34,7 +34,7 @@ const blacklist = fs.readFileSync('./blacklist.txt')
     }
 
     const [path, query] = req.url.split('?');
-    req.url = path;
+    req.url = path || '/';
     req.query = query ? querystring.parse(query) : {};
 
     const chunks = [];
@@ -57,7 +57,7 @@ const blacklist = fs.readFileSync('./blacklist.txt')
       res.end(serializers.raw(output));
     })
     .catch((err) => {
-      res.status(500).end();
+      res.status(500).end(Constants.SERVER_ERR_MESSAGE);
       console.error(err);
     });
   });
@@ -97,7 +97,7 @@ const blacklist = fs.readFileSync('./blacklist.txt')
         .end();
     })
     .catch((err) => {
-      res.status(500).end();
+      res.status(500).end(Constants.SERVER_ERR_MESSAGE);
       console.error(err);
     });
   });
@@ -110,7 +110,7 @@ const blacklist = fs.readFileSync('./blacklist.txt')
         res.end(serializers.og(output));
       })
       .catch((err) => {
-        res.status(500).end();
+        res.status(500).end(Constants.SERVER_ERR_MESSAGE);
         console.error(err);
       });
     } else {
@@ -119,7 +119,7 @@ const blacklist = fs.readFileSync('./blacklist.txt')
   });
 
   router.get(/.+/, (req, res) => {
-    res.status(404).end('404 m8');
+    res.status(404).end(Constants.SERVER_404_MESSAGE);
   });
 
   server.listen(Constants.SERVER_PORT);
@@ -147,8 +147,7 @@ function getFinal(url) {
       }
       console.log(`Scanned ${trail[0]} ... safe=${safe}, fail=${fail}`);
       return { trail, safe, fail, reasons };
-    })
-    .catch(console.error);
+    });
 }
 
 process.on('unhandledRejection', console.error);

@@ -7,6 +7,9 @@ exports.TICKS = {
 
 exports.SERVER_PORT = 5000;
 
+exports.SERVER_ERR_MESSAGE = 'Checking url failed... Maybe your url is bad?';
+exports.SERVER_404_MESSAGE = '404. Make sure your url starts with "https://" or "http://"';
+
 exports.UA_REGEX = /(Discord|Slack)Bot/i;
 
 exports.CORS_ORIGINS = [
