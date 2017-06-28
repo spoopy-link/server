@@ -7,6 +7,7 @@ const Router = require('./server/Router');
 const Constants = require('./Constants');
 const serializers = require('./serializers');
 const querystring = require('querystring');
+require('promise_util');
 
 const blacklist = fs.readFileSync('./blacklist.txt')
   .toString().split('\n')

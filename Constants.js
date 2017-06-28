@@ -1,4 +1,4 @@
-exports.MAX_REDIRECTS = 3;
+exports.MAX_REDIRECTS = 4;
 
 exports.TICKS = {
   green: 'https://cdn.discordapp.com/emojis/318902154054205460.png',

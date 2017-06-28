@@ -1,7 +1,6 @@
 const http = require('http');
 const https = require('https');
 const URL = require('./url');
-const { createPromise, promiseResolve, promiseReject } = process.binding('util');
 const Constants = require('../Constants');
 const metaRefresh = require('./meta_refresh');
 
@@ -9,13 +8,13 @@ function redirects(url, last) {
   if (!new URL(url)) return Promise.reject(new Error('invalid url'));
   if (!last) {
     last = {};
-    last.promise = createPromise();
+    last.promise = Promise.create();
     last.urls = [];
   }
   last.urls.push(url);
 
   if (last.urls.length > Constants.MAX_REDIRECTS) {
-    promiseResolve(last.promise, last.urls);
+    last.promise.resolve(last.urls);
   } else {
     try {
       const request = (url.startsWith('https') ? https : http).get(url, (res) => {
@@ -26,14 +25,16 @@ function redirects(url, last) {
           redirects(newURL, last);
         } else {
           let done = false;
+
           const chunks = [];
           res.on('data', chunk => chunks.push(chunk));
 
           const finish = () => {
-            promiseResolve(last.promise, last.urls);
+            last.promise.resolve(last.urls);
             done = true;
           };
           const timeout = setTimeout(finish, 750);
+
           res.on('end', () => {
             if (done) return;
             clearTimeout(timeout);
@@ -47,11 +48,11 @@ function redirects(url, last) {
         }
       });
       request.on('error', (err) => {
-        promiseReject(last.promise, err);
+        last.promise.reject(err);
       });
     } catch (err) {
       console.error('INVALID URL', url);
-      promiseReject(last.promise, err);
+      last.promise.reject(err);
     }
   }
 

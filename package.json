@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "parse5": "^3.0.2",
+    "promise_util": "gist:15f2c9675c3faa9df0d63223e283ad35",
     "snekfetch": "^3.1.11"
   },
   "devDependencies": {},
