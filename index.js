@@ -18,9 +18,6 @@ const blacklist = fs.readFileSync('./blacklist.txt')
       .then(r => r.text),
     spoopy: await request.get('https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages/404.html')
       .then(r => r.text),
-    slack_callback:
-      await request.get('https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages/slack_callback.html')
-      .then(r => r.text),
   };
 
   const server = http.createServer();
@@ -73,7 +70,20 @@ const blacklist = fs.readFileSync('./blacklist.txt')
 
   router.get('/slack/callback', (req, res) => {
     res.setHeader('Content-Type', 'text/html');
-    res.end(pages.slack_callback);
+    request.get('https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages/slack/callback.html')
+      .pipe(res);
+  });
+
+  router.get('/slack/support', (req, res) => {
+    res.setHeader('Content-Type', 'text/html');
+    request.get('https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages/slack/support.html')
+      .pipe(res);
+  });
+
+  router.get('/slack/privacy', (req, res) => {
+    res.setHeader('Content-Type', 'text/html');
+    request.get('https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages/slack/privacy.html')
+      .pipe(res);
   });
 
   router.post('/slack', (req, res) => {
