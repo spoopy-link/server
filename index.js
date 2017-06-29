@@ -16,6 +16,10 @@ const router = new Router(server);
 
 router.use((req, res, next) => {
   req.needsOG = Constants.UA_REGEX.test(req.headers['user-agent']);
+  res.setHeader('Content-Security-Policy', 'default-src \'self\'');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
   if (Constants.CORS_ORIGINS.includes(req.headers.origin)) {
     res.setHeaders({
       'Access-Control-Allow-Origin': req.headers.origin,
