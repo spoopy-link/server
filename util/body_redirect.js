@@ -22,8 +22,8 @@ module.exports = function(html, time) {
 
   dom = new JSDOM(html, {
     runScripts: Constants.RUN_JS ? 'dangerously' : undefined,
-    onNavigationChange: (location) => {
-      finish(format(location));
+    onLocationChange: (location) => {
+      finish(location.href);
     },
   });
 
@@ -43,16 +43,4 @@ module.exports = function(html, time) {
   if (tag) finish(parseMetaRefresh(tag).url);
 
   return promise;
-}
-
-function format(l) {
-  return URL.format({
-    protocol: l.scheme + ':',
-    slashes: true,
-    host: l.host,
-    hash: l.fragment,
-    search: l.query ? '?' + l.query : undefined,
-    pathname: l.path ? l.path.join('/') : undefined,
-    port: l.port,
-  });
 }
