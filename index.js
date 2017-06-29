@@ -54,6 +54,11 @@ router.get(/\/json\/.+/, (req, res) => {
 });
 
 router.get('/slack', (req, res) => {
+  res.setHeader('Content-Type', 'text/html');
+  webCache.get('slack_index').then(t => res.end(t));
+});
+
+router.get('/slack/add', (req, res) => {
   const redirect = `https://slack.com/oauth/authorize?${querystring.stringify(Constants.OAUTH)}`;
   res.writeHead(302, { Location: redirect });
   res.end();

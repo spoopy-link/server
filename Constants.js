@@ -33,6 +33,7 @@ exports.OAUTH = {
 exports.PAGES = {
   index: '/index.html',
   spoopy: '/404.html',
+  slack_index: '/slack/index.html',
   slack_privacy: '/slack/privacy.html',
   slack_support: '/slack/support.html',
   slack_callback: '/slack/callback.html',
