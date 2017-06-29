@@ -121,6 +121,10 @@ router.get('/main.js', (req, res) => {
   webCache.get('js').then(t => res.end(t));
 });
 
+router.get('/keybase.txt', (req, res) => {
+  webCache.get('keybase').then(t => res.end(t));
+});
+
 router.get(/.+/, (req, res) => {
   res.status(404).end(Constants.SERVER_404_MESSAGE);
 });

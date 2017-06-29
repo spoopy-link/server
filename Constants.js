@@ -39,6 +39,7 @@ exports.PAGES = {
   slack_callback: '/slack/callback.html',
   css: '/main.css',
   js: '/main.js',
+  keybase: '/keybase.txt',
 };
 
 exports.GH_ROOT = 'https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages';
