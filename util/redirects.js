@@ -2,7 +2,7 @@ const http = require('http');
 const https = require('https');
 const URL = require('./url');
 const Constants = require('../Constants');
-const metaRefresh = require('./meta_refresh');
+const bodyRedirect = require('./body_redirect');
 
 function redirects(url, last) {
   if (!new URL(url)) return Promise.reject(new Error('invalid url'));
@@ -38,12 +38,9 @@ function redirects(url, last) {
           res.on('end', () => {
             if (done) return;
             clearTimeout(timeout);
-            const meta = metaRefresh(Buffer.concat(chunks).toString());
-            if (meta && meta.url) {
-              redirects(meta.url, last);
-            } else {
-              finish();
-            }
+            bodyRedirect(Buffer.concat(chunks).toString(), 750)
+            .then((url) => redirects(url, last))
+            .catch(() => finish());
           });
         }
       });

@@ -1,4 +1,4 @@
-const parse5 = require('parse5');
+// const parse5 = require('parse5');
 const pattern = /^\s*(\d+)(?:\s*;(?:\s*url\s*=)?\s*(.+)?)?$/i;
 
 function parseMetaRefresh(content) {
@@ -46,4 +46,4 @@ function getMetaTags(html) {
   return parseMetaRefresh(tag);
 }
 
-module.exports = getMetaTags;
+module.exports = parseMetaRefresh;

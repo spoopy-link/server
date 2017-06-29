@@ -43,3 +43,4 @@ exports.PAGES = {
 
 exports.GH_ROOT = 'https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages';
 
+exports.CHECK_JS = false;
