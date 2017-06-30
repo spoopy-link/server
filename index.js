@@ -1,3 +1,4 @@
+require('dotenv').config();
 require('promise_util');
 const fs = require('fs');
 const http = require('http');
@@ -68,14 +69,28 @@ router.get('/slack', (req, res) => {
 });
 
 router.get('/slack/add', (req, res) => {
-  const redirect = `https://slack.com/oauth/authorize?${querystring.stringify(Constants.OAUTH)}`;
+  const redirect = `https://slack.com/oauth/authorize?${querystring.stringify(Constants.SLACK_OAUTH)}`;
   res.writeHead(302, { Location: redirect });
   res.end();
 });
 
 router.get('/slack/callback', (req, res) => {
   res.setHeader('Content-Type', 'text/html');
-  webCache.get('slack_callback').then(t => res.end(t));
+  request.post('https://slack.com/api/oauth.access')
+    .query({
+      client_id: process.env.SLACK_CLIENT_ID,
+      client_secret: process.env.SLACK_CLIENT_SECRET,
+      code: req.query.code,
+      redirect_uri: Constants.SLACK_OAUTH.redirect_uri,
+    })
+    .then((r) => {
+      const team = r.body.team_name;
+      webCache.get('slack_callback').then(t => res.end(team ? t.replace('your team', team) : t));
+    })
+    .catch((err) => {
+      console.error(err);
+      res.end('error lol');
+    });
 });
 
 router.get('/slack/support', (req, res) => {
@@ -90,6 +105,11 @@ router.get('/slack/privacy', (req, res) => {
 
 router.post('/slack', (req, res) => {
   const body = querystring.parse(req.body);
+
+  if (body.token !== process.env.SLACK_VERIFICATION) {
+    res.status(403).end();
+    return;
+  }
    
   getFinal(body.text.replace(/<|>/g, ''))
     .then((output) => {

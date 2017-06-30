@@ -24,8 +24,8 @@ exports.REASONS = {
   TOO_MANY: 'Too many redirects, could be spoopy',
 };
 
-exports.OAUTH = {
-  client_id: '203897278339.204022634292',
+exports.SLACK_OAUTH = {
+  client_id: process.env.SLACK_CLIENT_ID,
   redirect_uri: 'https://spoopy.link/slack/callback',
   scope: 'commands',
 };
