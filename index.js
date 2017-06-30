@@ -16,11 +16,15 @@ const router = new Router(server);
 
 router.use((req, res, next) => {
   req.needsOG = Constants.UA_REGEX.test(req.headers['user-agent']);
-  res.setHeader('Content-Security-Policy', 'default-src \'self\' *.gus.host *.google-analytics.com');
+  res.setHeader('Content-Security-Policy', [
+    'default-src \'self\' s.gus.host',
+    'script-src \'self\' \'nonce-inline\' www.google-analytics.com cdn.rawgit.com',
+    'img-src \'self\' www.google-analytics.com',
+  ].join(';'));
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('Referrer-Policy', 'strict-origin');
+  res.setHeader('Referrer-Policy', 'no-referrer-when-downgrade');
   if (Constants.CORS_ORIGINS.includes(req.headers.origin)) {
     res.setHeaders({
       'Access-Control-Allow-Origin': req.headers.origin,
@@ -112,6 +116,7 @@ router.get(/\/(https?).+/, (req, res) => {
         console.error(err);
       });
     } else {
+      res.setHeader('Content-Type', 'text/html');
       webCache.get('spoopy').then(t => res.end(t));
     }
 });
