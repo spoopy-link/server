@@ -20,6 +20,7 @@ router.use((req, res, next) => {
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Referrer-Policy', 'unsafe-url');
   if (Constants.CORS_ORIGINS.includes(req.headers.origin)) {
     res.setHeaders({
       'Access-Control-Allow-Origin': req.headers.origin,
