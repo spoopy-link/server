@@ -16,7 +16,7 @@ const router = new Router(server);
 
 router.use((req, res, next) => {
   req.needsOG = Constants.UA_REGEX.test(req.headers['user-agent']);
-  res.setHeader('Content-Security-Policy', 'default-src \'self\'');
+  res.setHeader('Content-Security-Policy', 'default-src \'self\' *.gus.host *.google-analytics.com');
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('X-Frame-Options', 'DENY');
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -122,7 +122,7 @@ router.get('/main.css', (req, res) => {
 });
 
 router.get('/main.js', (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
+  res.setHeader('Content-Type', 'application/javascript');
   webCache.get('js').then(t => res.end(t));
 });
 
