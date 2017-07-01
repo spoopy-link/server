@@ -9,7 +9,7 @@ http.ServerResponse.prototype.end = function(...args) {
     this.writeHead(args[0], { 'Content-Type': 'application/json' });
     end.call(this, JSON.stringify(args[1]));
   } else if (args[0] && args[0].constructor === Object) {
-    this.setHeader('Content-Type': 'application/json');
+    this.setHeader('Content-Type', 'application/json');
     end.call(this, JSON.stringify(args[0]));
   } else {
     end.call(this, ...args);
