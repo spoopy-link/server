@@ -58,7 +58,8 @@ router.get(/\/json\/.+/, (req, res) => {
     res.end(serializers.raw(output));
   })
   .catch((err) => {
-    res.status(500).end({ error: Constants.SERVER_ERR_MESSAGE });
+    res.setHeader('Content-Type', 'application/json');
+    res.end({ error: Constants.SERVER_ERR_MESSAGE });
     console.error(err);
   });
 });
@@ -110,7 +111,7 @@ router.post('/slack', (req, res) => {
     res.status(403).end();
     return;
   }
-   
+
   getFinal(body.text.replace(/<|>/g, ''))
     .then((output) => {
       res.end(200);
