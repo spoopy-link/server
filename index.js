@@ -9,8 +9,8 @@ const Router = require('./server/Router');
 const Constants = require('./Constants');
 const serializers = require('./serializers');
 const querystring = require('querystring');
-
 const webCache = require('./web_cache');
+const log = require('./util/logger');
 
 const server = http.createServer();
 const router = new Router(server);
@@ -60,7 +60,7 @@ router.get(/\/json\/.+/, (req, res) => {
   .catch((err) => {
     res.setHeader('Content-Type', 'application/json');
     res.end({ error: Constants.SERVER_ERR_MESSAGE });
-    console.error(err);
+    log('JSON', err);
   });
 });
 
@@ -89,7 +89,7 @@ router.get('/slack/callback', (req, res) => {
       webCache.get('slack_callback').then(t => res.end(team ? t.replace('your team', team) : t));
     })
     .catch((err) => {
-      console.error(err);
+      log('SLACK/CALLBACK', err);
       res.end('error lol');
     });
 });
@@ -121,7 +121,7 @@ router.post('/slack', (req, res) => {
     })
     .catch((err) => {
       res.status(500).end(Constants.SERVER_ERR_MESSAGE);
-      console.error(err);
+      log('SLACK/POST', err);
     });
 });
 
@@ -134,12 +134,12 @@ router.get(/\/<?https?.+/, (req, res) => {
       })
       .catch((err) => {
         res.status(500).end(Constants.SERVER_ERR_MESSAGE);
-        console.error(err);
+        log('OG', err);
       });
-    } else {
-      res.setHeader('Content-Type', 'text/html');
-      webCache.get('spoopy').then(t => res.end(t));
-    }
+  } else {
+    res.setHeader('Content-Type', 'text/html');
+    webCache.get('spoopy').then(t => res.end(t));
+  }
 });
 
 router.get('/main.css', (req, res) => {
@@ -155,6 +155,13 @@ router.get('/main.js', (req, res) => {
 router.get('/keybase.txt', (req, res) => {
   webCache.get('keybase').then(t => res.end(t));
 });
+
+if (process.env.CACHE_KEY) {
+  router.get(`/${process.env.CACHE_KEY}`, (req, res) => {
+    webCache.clear();
+    res.end('cache cleared :)');
+  });
+}
 
 router.get(/.+/, (req, res) => {
   res.status(404).end(Constants.SERVER_404_MESSAGE);
@@ -172,9 +179,8 @@ function getFinal(url) {
     // fuck discord
     .replace(/(https?):\/([^/])/, (_, protocol, x) => `${protocol}://${x}`)
     // fuck people who don't understand that `<url>` means just put the url
-    .replace(/(^<|>$)/g, '')
+    .replace(/(^<|>$)/g, '');
 
-  console.log(url)
   return redirects(url)
     .then((trail) => {
       let reasons = [];
@@ -192,7 +198,7 @@ function getFinal(url) {
           break;
         }
       }
-      console.log(`Scanned ${trail[0]} ... safe=${safe}, fail=${fail}`);
+      log('SCANNED', `${trail[0]}: safe=${safe}, fail=${fail}`);
       return { trail, safe, fail, reasons };
     });
 }

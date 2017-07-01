@@ -1,25 +1,38 @@
-// const EventEmitter = require('events');
+const EventEmitter = require('events');
 
-// class TimedCache extends EventEmitter {
-class TimedCache {
+const VALID = 'VALID';
+const RECACHE = 'RECACHE';
+const INITIAL = 'INITIAL';
+
+class TimedCache extends EventEmitter {
   constructor(time, getter) {
-    // super();
+    super();
     this.time = time;
     this._cache = {};
     this._getter = getter;
   }
 
-  get(item) {
-    if (this._cache[item] && Date.now() - this._cache[item].time < this.time) {
-      // this.emit('get', item, true);
-      return Promise.resolve(this._cache[item].data);
+  async get(item) {
+    if (this._cache[item]) {
+      if (Date.now() - this._cache[item].time < this.time) {
+        this.emit('get', VALID, item);
+        return this._cache[item].data;
+      } else {
+        this.emit('get', RECACHE, item);
+        this._fetch(item);
+        return this._cache[item].data;
+      }
     } else {
-      // this.emit('get', item, false);
-      return this._getter(item).then((data) => {
-        this._cache[item] = { time: Date.now(), data };
-        return data;
-      });
+      this.emit('get', INITIAL, item);
+      return this._fetch(item);
     }
+  }
+
+  _fetch(item) {
+    return this._getter(item).then((data) => {
+      this._cache[item] = { time: Date.now(), data };
+      return data;
+    });
   }
 
   clear() {
