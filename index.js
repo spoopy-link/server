@@ -35,7 +35,7 @@ router.use((req, res, next) => {
   }
 
   const [path, query] = req.url.split('?');
-  req.url = path || '/';
+  req.url = decodeURIComponent(path) || '/';
   req.query = query ? querystring.parse(query) : {};
 
   const chunks = [];
@@ -125,7 +125,7 @@ router.post('/slack', (req, res) => {
     });
 });
 
-router.get(/\/(https?).+/, (req, res) => {
+router.get(/\/<?https?.+/, (req, res) => {
   if (req.needsOG) {
     getFinal(req.url.slice(1))
       .then((output) => {
@@ -168,13 +168,18 @@ const blacklist = fs.readFileSync('./blacklist.txt')
 
 
 function getFinal(url) {
-  // fuck discord
-  url = url.replace(/(https?):\/([^/])/, (_, protocol, x) => `${protocol}://${x}`);
+  url = url
+    // fuck discord
+    .replace(/(https?):\/([^/])/, (_, protocol, x) => `${protocol}://${x}`)
+    // fuck people who don't understand that `<url>` means just put the url
+    .replace(/(^<|>$)/g, '')
+
+  console.log(url)
   return redirects(url)
     .then((trail) => {
       let reasons = [];
       let safe = true;
-      let fail = 0;
+      let fail = -1;
       if (trail.length > Constants.MAX_REDIRECTS) {
         reasons.push(Constants.REASONS.TOO_MANY);
         safe = false;
