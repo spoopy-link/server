@@ -9,3 +9,4 @@ module.exports = function(url) {
 };
 
 module.exports.resolve = URL.resolve;
+module.exports.parse = URL.parse;

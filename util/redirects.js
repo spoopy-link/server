@@ -17,7 +17,9 @@ function redirects(url, last) {
     last.promise.resolve(last.urls);
   } else {
     try {
-      const request = (url.startsWith('https') ? https : http).get(url, (res) => {
+      const options = URL.parse(url);
+      options.headers = { 'User-Agent': Constants.UA };
+      const request = (url.startsWith('https') ? https : http).get(options, (res) => {
         if ([300, 301, 302, 303].includes(res.statusCode)) {
           const newURL = /^https?:\/\//i.test(res.headers.location) ?
             res.headers.location :
