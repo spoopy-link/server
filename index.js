@@ -47,25 +47,25 @@ router.use((req, res, next) => {
 });
 
 router.get('/', (req, res) => {
-  res.setHeader('Content-Type', 'text/html');
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
   webCache.get('index').then(t => res.end(t));
 });
 
 router.get(/\/json\/.+/, (req, res) => {
   getFinal(req.url.replace('/json/', ''))
   .then((output) => {
-    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.end(serializers.raw(output));
   })
   .catch((err) => {
-    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.end({ error: Constants.SERVER_ERR_MESSAGE });
     log('JSON', err);
   });
 });
 
 router.get('/slack', (req, res) => {
-  res.setHeader('Content-Type', 'text/html');
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
   webCache.get('slack_index').then(t => res.end(t));
 });
 
@@ -76,7 +76,7 @@ router.get('/slack/add', (req, res) => {
 });
 
 router.get('/slack/callback', (req, res) => {
-  res.setHeader('Content-Type', 'text/html');
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
   request.post('https://slack.com/api/oauth.access')
     .query({
       client_id: process.env.SLACK_CLIENT_ID,
@@ -95,12 +95,12 @@ router.get('/slack/callback', (req, res) => {
 });
 
 router.get('/slack/support', (req, res) => {
-  res.setHeader('Content-Type', 'text/html');
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
   webCache.get('slack_support').then(t => res.end(t));
 });
 
 router.get('/slack/privacy', (req, res) => {
-  res.setHeader('Content-Type', 'text/html');
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
   webCache.get('slack_privacy').then(t => res.end(t));
 });
 
@@ -129,7 +129,7 @@ router.get(/\/<?https?.+/, (req, res) => {
   if (req.needsOG) {
     getFinal(req.url.slice(1))
       .then((output) => {
-        res.setHeader('Content-Type', 'text/html');
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
         res.end(serializers.og(output));
       })
       .catch((err) => {
@@ -137,18 +137,18 @@ router.get(/\/<?https?.+/, (req, res) => {
         log('OG', err);
       });
   } else {
-    res.setHeader('Content-Type', 'text/html');
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
     webCache.get('spoopy').then(t => res.end(t));
   }
 });
 
 router.get('/main.css', (req, res) => {
-  res.setHeader('Content-Type', 'text/css');
+  res.setHeader('Content-Type', 'text/css; charset=utf-8');
   webCache.get('css').then(t => res.end(t));
 });
 
 router.get('/main.js', (req, res) => {
-  res.setHeader('Content-Type', 'application/javascript');
+  res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
   webCache.get('js').then(t => res.end(t));
 });
 
