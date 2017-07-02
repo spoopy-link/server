@@ -20,11 +20,11 @@ exports.CORS_ORIGINS = [
   'https://gus.host',
 ];
 
-exports.REASONS = {
-  SPOOPY_LINK: 'Redirect trail contains a spoopy link',
-  TOO_MANY: 'Too many redirects, could be spoopy',
-  PHISHTANK: 'Url was found in the phishtank database',
-};
+exports.REASONS = keyMirror([
+  'UNSAFE_LINK',
+  'REDIRECT_COUNT',
+  'PHISHTANK',
+]);
 
 exports.SLACK_OAUTH = {
   client_id: process.env.SLACK_CLIENT_ID,
@@ -47,3 +47,7 @@ exports.PAGES = {
 exports.GH_ROOT = 'https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages';
 
 exports.CHECK_JS = false;
+
+function keyMirror(arr) {
+  return arr.reduce((o, i) => { return o[i] = i, o }, {});
+}

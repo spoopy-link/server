@@ -30,7 +30,7 @@ module.exports = async function isSpoopy(url) {
       let safe = true;
       let fail = -1;
       if (trail.length > Constants.MAX_REDIRECTS) {
-        reasons.push(Constants.REASONS.TOO_MANY);
+        reasons.push(Constants.REASONS.REDIRECT_COUNT);
         safe = false;
       }
       for (let i = 0; i < trail.length; i++) {
@@ -42,7 +42,7 @@ module.exports = async function isSpoopy(url) {
         } else if (blacklist.includes(URL(trail[i]).hostname)) {
           safe = false;
           fail = i;
-          reasons.push(Constants.REASONS.SPOOPY_LINK);
+          reasons.push(Constants.REASONS.UNSAFE_LINK);
           break;
         }
       }
