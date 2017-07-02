@@ -1,6 +1,7 @@
 const Constants = require('../Constants');
 const fs = require('fs');
 const redirects = require('./redirects');
+const hsts = require('./hsts');
 const URL = require('./url');
 const log = require('./logger');
 
@@ -8,15 +9,17 @@ const blacklist = fs.readFileSync('./blacklist.txt')
   .toString().split('\n')
   .filter((x) => x);
 
-module.exports = function isSpoopy(url) {
+module.exports = async function isSpoopy(url) {
   url = url
     // Fuck discord
     .replace(/(https?):\/([^/])/, (_, protocol, x) => `${protocol}://${x}`)
     // Fuck people who don't understand that `<url>` means just put the url
     .replace(/(^<|>$)/g, '');
 
-  // default to http
-  if (!/https?:\/\//.test(url)) url = `http://${url}`;
+  if (!/https?:\/\//.test(url)) {
+    const preloaded = await hsts(url.split('/')[0]);
+    url = `http${preloaded ? 's' : ''}://${url}`;
+  }
 
   return redirects(url)
     .then((trail) => {
