@@ -23,6 +23,7 @@ exports.CORS_ORIGINS = [
 exports.REASONS = {
   SPOOPY_LINK: 'Redirect trail contains a spoopy link',
   TOO_MANY: 'Too many redirects, could be spoopy',
+  PHISHTANK: 'Url was found in the phishtank database',
 };
 
 exports.SLACK_OAUTH = {

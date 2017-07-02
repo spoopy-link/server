@@ -20,7 +20,7 @@ module.exports = async function isSpoopy(url) {
     .replace(/(^<|>$)/g, '');
 
   if (!/https?:\/\//.test(url)) {
-    const preloaded = await hsts(url.split('/')[0]);
+    const preloaded = await hsts(url.split(/[/?]/)[0]);
     url = `http${preloaded ? 's' : ''}://${url}`;
   }
 

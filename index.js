@@ -55,6 +55,13 @@ router.get('/', (req, res) => {
 
 routes.static(router);
 
+if (process.env.CACHE_KEY) {
+  router.get(`/${process.env.CACHE_KEY}`, (req, res) => {
+    webCache.clear();
+    res.end('cache cleared :)');
+  });
+}
+
 router.get(/\/json\/.+/, (req, res) => {
   isSpoopy(req.url.replace('/json/', ''))
     .then((output) => {
@@ -84,13 +91,6 @@ router.get(/\/.+/, (req, res) => {
     webCache.get('spoopy').then((t) => res.end(t));
   }
 });
-
-if (process.env.CACHE_KEY) {
-  router.get(`/${process.env.CACHE_KEY}`, (req, res) => {
-    webCache.clear();
-    res.end('cache cleared :)');
-  });
-}
 
 routes.slack(router);
 
