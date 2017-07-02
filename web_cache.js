@@ -6,7 +6,7 @@ const { JSDOM } = require('jsdom');
 const log = require('./util/logger');
 
 const cache = new TimedCache(9e5, (item) => request.get(`${GH_ROOT}${PAGES[item]}`)
-  .then(async (res) => {
+  .then(async(res) => {
     if (!res.text.startsWith('<!DOCTYPE html>')) return res.text;
     const dom = new JSDOM(res.text);
     const scripts = dom.window.document.querySelectorAll('script');
@@ -17,7 +17,7 @@ const cache = new TimedCache(9e5, (item) => request.get(`${GH_ROOT}${PAGES[item]
       let src = (node.src || node.href).replace(/^\//, '');
       src = /^https?:\/\//.test(src) ? src : `https://spoopy.link/${src}`;
       await request.get(src)
-        .then(r => {
+        .then((r) => {
           node.setAttribute('integrity', `sha384-${crypto.createHash('sha384').update(r.text).digest('base64')}`);
         })
         .catch(log);

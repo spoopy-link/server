@@ -1,4 +1,3 @@
-// const parse5 = require('parse5');
 const pattern = /^\s*(\d+)(?:\s*;(?:\s*url\s*=)?\s*(.+)?)?$/i;
 
 function parseMetaRefresh(content) {
@@ -24,26 +23,6 @@ function parseMetaRefresh(content) {
   }
 
   return result;
-}
-
-function getMetaTags(html) {
-  const ast = parse5.parseFragment(html);
-  const tag = (function repeat(obj) {
-    if (obj.childNodes) {
-      for (const node of obj.childNodes) {
-        if (
-          node.nodeName === 'meta' &&
-          node.attrs && node.attrs.find(a => a.name === 'http-equiv' && a.value === 'refresh')
-        ) {
-          return node.attrs.find(a => a.name === 'content').value;
-        } else if (node.childNodes) {
-          repeat(node.childNodes);
-        }
-      }
-    }
-  }(ast));
-  if (!tag) return null;
-  return parseMetaRefresh(tag);
 }
 
 module.exports = parseMetaRefresh;

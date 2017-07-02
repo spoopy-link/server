@@ -1,4 +1,4 @@
-require('./Response');
+const Response = require('./Response');
 
 class Router {
   constructor(server) {
@@ -8,13 +8,14 @@ class Router {
   }
 
   async handleRequest(req, res) {
-    await Promise.all(this.usables.map(u => new Promise(r => u(req, res, r))));
-    for (const route of this.routes.filter(r => r.method === req.method)) {
+    const response = new Response(res);
+    await Promise.all(this.usables.map((u) => new Promise((r) => u(req, response, r))));
+    for (const route of this.routes.filter((r) => r.method === req.method)) {
       const match = typeof route.route === 'string' ?
         route.route === req.url :
         route.route.test(req.url);
       if (!match) continue;
-      route.handler(req, res);
+      route.handler(req, response);
       break;
     }
   }
@@ -25,7 +26,7 @@ class Router {
 }
 
 for (const method of ['GET', 'POST']) {
-  Router.prototype[method.toLowerCase()] = function(regex, handler) {
+  Router.prototype[method.toLowerCase()] = function handle(regex, handler) {
     this.routes.push({
       route: regex,
       handler,

@@ -12,15 +12,15 @@ class TimedCache extends EventEmitter {
     this._getter = getter;
   }
 
-  async get(item) {
+  get(item) {
     if (this._cache[item]) {
       if (Date.now() - this._cache[item].time < this.time) {
         this.emit('get', VALID, item);
-        return this._cache[item].data;
+        return Promise.resolve(this._cache[item].data);
       } else {
         this.emit('get', RECACHE, item);
         this._fetch(item);
-        return this._cache[item].data;
+        return Promise.resolve(this._cache[item].data);
       }
     } else {
       this.emit('get', INITIAL, item);

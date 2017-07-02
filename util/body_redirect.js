@@ -1,9 +1,8 @@
 const { JSDOM } = require('jsdom');
-const URL = require('url');
 const parseMetaRefresh = require('./meta_refresh');
 const Constants = require('../Constants');
 
-module.exports = function(html, time) {
+module.exports = function bodyRedirect(html, time) {
   const promise = Promise.create();
   let done = false;
 
@@ -32,9 +31,11 @@ module.exports = function(html, time) {
     for (const node of obj.childNodes) {
       if (
         node.nodeName === 'META' &&
-        node.attributes && Array.prototype.find.call(node.attributes, a => a.name === 'http-equiv' && a.value === 'refresh')
+        node.attributes && Array.prototype.find.call(node.attributes, (a) =>
+          a.name === 'http-equiv' && a.value === 'refresh')
       ) {
-        return Array.prototype.find.call(node.attributes, a => a.name === 'content').value;
+        // eslint-disable-next-line consistent-return
+        return Array.prototype.find.call(node.attributes, (a) => a.name === 'content').value;
       } else if (node.childNodes) {
         repeat(node.childNodes);
       }
@@ -43,4 +44,4 @@ module.exports = function(html, time) {
   if (tag) finish(parseMetaRefresh(tag).url);
 
   return promise;
-}
+};

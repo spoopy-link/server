@@ -1,6 +1,6 @@
 const URL = require('url');
 
-module.exports = function(url) {
+module.exports = (url) => {
   try {
     return new URL.URL(url);
   } catch (err) {

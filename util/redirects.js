@@ -3,9 +3,10 @@ const https = require('https');
 const URL = require('./url');
 const Constants = require('../Constants');
 const bodyRedirect = require('./body_redirect');
+const log = require('./logger');
 
 function redirects(url, last) {
-  if (!new URL(url)) return Promise.reject(new Error('invalid url'));
+  if (!URL(url)) return Promise.reject(new Error('invalid url'));
   if (!last) {
     last = {};
     last.promise = Promise.create();
@@ -29,7 +30,7 @@ function redirects(url, last) {
           let done = false;
 
           const chunks = [];
-          res.on('data', chunk => chunks.push(chunk));
+          res.on('data', (chunk) => chunks.push(chunk));
 
           const finish = () => {
             last.promise.resolve(last.urls);
@@ -41,8 +42,8 @@ function redirects(url, last) {
             if (done) return;
             clearTimeout(timeout);
             bodyRedirect(Buffer.concat(chunks).toString(), 750)
-            .then((url) => redirects(url, last))
-            .catch(() => finish());
+              .then((u) => redirects(u, last))
+              .catch(() => finish());
           });
         }
       });
@@ -50,7 +51,7 @@ function redirects(url, last) {
         last.promise.reject(err);
       });
     } catch (err) {
-      console.error('INVALID URL', url);
+      log('INVALID URL', url);
       last.promise.reject(err);
     }
   }
