@@ -2,8 +2,11 @@ const Constants = require('../Constants');
 const fs = require('fs');
 const redirects = require('./redirects');
 const hsts = require('./hsts');
+const phishtank = require('./phishtank');
 const URL = require('./url');
 const log = require('./logger');
+
+phishtank.cache().then(() => log('PHISHTANK', 'Cached'));
 
 const blacklist = fs.readFileSync('./blacklist.txt')
   .toString().split('\n')
@@ -22,7 +25,7 @@ module.exports = async function isSpoopy(url) {
   }
 
   return redirects(url)
-    .then((trail) => {
+    .then(async (trail) => {
       let reasons = [];
       let safe = true;
       let fail = -1;
@@ -31,7 +34,12 @@ module.exports = async function isSpoopy(url) {
         safe = false;
       }
       for (let i = 0; i < trail.length; i++) {
-        if (blacklist.includes(URL(trail[i]).hostname)) {
+        if (await phishtank(trail[i])) {
+          safe = false;
+          fail = i;
+          reasons.push(Constants.REASONS.PHISHTANK);
+          break;
+        } else if (blacklist.includes(URL(trail[i]).hostname)) {
           safe = false;
           fail = i;
           reasons.push(Constants.REASONS.SPOOPY_LINK);
