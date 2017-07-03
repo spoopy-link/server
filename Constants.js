@@ -44,7 +44,7 @@ exports.PAGES = {
   keybase: '/keybase.txt',
 };
 
-exports.GH_ROOT = 'https://raw.githubusercontent.com/devsnek/spoopy.link/gh-pages';
+exports.GH_ROOT = 'https://raw.githubusercontent.com/spoopy-link/site/master';
 
 exports.CHECK_JS = false;
 
