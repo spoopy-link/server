@@ -25,28 +25,24 @@ module.exports = async function isSpoopy(url) {
   }
 
   return redirects(url)
-    .then(async (trail) => {
-      let reasons = [];
-      let safe = true;
-      let fail = -1;
-      if (trail.length > Constants.MAX_REDIRECTS) {
-        reasons.push(Constants.REASONS.REDIRECT_COUNT);
-        safe = false;
-      }
-      for (let i = 0; i < trail.length; i++) {
-        if (await phishtank(trail[i])) {
-          safe = false;
-          fail = i;
-          reasons.push(Constants.REASONS.PHISHTANK);
-          break;
-        } else if (blacklist.includes(URL(trail[i]).hostname)) {
-          safe = false;
-          fail = i;
-          reasons.push(Constants.REASONS.UNSAFE_LINK);
-          break;
+    .then(async (chain) => {
+      for (const i in chain) {
+        const scan = {
+          url: chain[i],
+          safe: true,
+          reasons: [],
+        };
+        if (blacklist.includes(URL(scan.url).hostname)) {
+          scan.reasons.push(Constants.REASONS.UNSAFE_LINK);
         }
+        if (await phishtank(scan.url)) {
+          scan.reasons.push(Constants.REASONS.PHISHTANK);
+        }
+        scan.safe = scan.reasons.length === 0;
+        chain[i] = scan;
       }
-      log('SCANNED', `${trail[0]}: safe=${safe}, fail=${fail}`);
-      return { trail, safe, fail, reasons };
+      const safe = !chain.some((t) => !t.safe);
+      log('SCANNED', `${chain[0].url}: safe=${safe}`);
+      return { chain, safe };
     });
 };
