@@ -6,7 +6,7 @@ const phishtank = require('./phishtank');
 const URL = require('./url');
 const log = require('./logger');
 
-phishtank.cache().then(() => log('PHISHTANK', 'Cached'));
+phishtank.cache();
 
 const blacklist = fs.readFileSync('./blacklist.txt')
   .toString().split('\n')

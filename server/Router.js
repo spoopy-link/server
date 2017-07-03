@@ -13,8 +13,9 @@ class Router {
     for (const route of this.routes.filter((r) => r.method === req.method)) {
       const match = typeof route.route === 'string' ?
         route.route === req.url :
-        route.route.test(req.url);
+        req.url.match(route.route);
       if (!match) continue;
+      if (match !== true) req.match = match;
       route.handler(req, response);
       break;
     }

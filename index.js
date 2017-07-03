@@ -13,7 +13,7 @@ const server = http.createServer();
 const router = new Router(server);
 router.cache = webCache;
 
-const routes = require('./routes')
+const routes = require('./routes');
 
 router.use((req, res, next) => {
   req.needsOG = Constants.UA_REGEX.test(req.headers['user-agent']);
@@ -64,11 +64,32 @@ if (process.env.CACHE_KEY) {
 
 routes.slack(router);
 
-router.get(/\/json\/.+/, (req, res) => {
-  isSpoopy(req.url.replace('/json/', ''))
+router.get(/\/api\/v(.+?)\/.+/, (req, res) => {
+  const version = req.match[1];
+  const serializer = serializers.api[`v${version}`];
+  if (!serializer) {
+    res.status(404).header('Content-Type', 'application/json; charset=utf-8');
+    res.end({ message: Constants.SERVER_404_MESSAGE });
+    return;
+  }
+
+  isSpoopy(req.url.replace(`/api/v${version}/`, ''))
     .then((output) => {
       res.header('Content-Type', 'application/json; charset=utf-8');
-      res.end(serializers.raw(output));
+      res.end(serializer(output));
+    })
+    .catch((err) => {
+      res.header('Content-Type', 'application/json; charset=utf-8');
+      res.end({ error: Constants.SERVER_ERR_MESSAGE });
+      log('JSON', err);
+    });
+});
+
+router.get(/\/api\/.+/, (req, res) => {
+  isSpoopy(req.url.replace('/api/', ''))
+    .then((output) => {
+      res.header('Content-Type', 'application/json; charset=utf-8');
+      res.end(serializers.api.current(output));
     })
     .catch((err) => {
       res.header('Content-Type', 'application/json; charset=utf-8');

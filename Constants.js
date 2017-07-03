@@ -49,5 +49,8 @@ exports.GH_ROOT = 'https://raw.githubusercontent.com/spoopy-link/site/master';
 exports.CHECK_JS = false;
 
 function keyMirror(arr) {
-  return arr.reduce((o, i) => { return o[i] = i, o }, {});
+  return arr.reduce((o, i) => {
+    o[i] = i;
+    return o;
+  }, {});
 }

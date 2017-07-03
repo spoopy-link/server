@@ -1,12 +1,16 @@
-const { TICKS } = require('./Constants');
+const { TICKS } = require('../Constants');
 
 module.exports = {
-  raw: (result) => result,
+  api: {
+    v1: require('./api/v1'),
+    current: require('./api/v1'),
+  },
   og: (result) => `<!DOCTYPE html>
 <html>
 <head>
 <meta property=og:title content="spoopy.link (${result.chain[0].url})">
-<meta property=og:description content="${result.safe ? 'Safe' : 'Unsafe'} link! Chain: ${result.chain.map((c) => c.url).join(' -> ')}">
+<meta property=og:description content="${result.safe ? 'Safe' : 'Unsafe'} link! Chain: ${result.chain
+  .map((c) => c.url).join(' -> ')}">
 <meta property=og:image content="${result.safe ? TICKS.green : TICKS.red}">
 <meta property=og:url content="https://spoopy.link/${result.chain[0].url}">
 </head>
