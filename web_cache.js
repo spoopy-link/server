@@ -5,7 +5,9 @@ const TimedCache = require('./util/TimedCache');
 const { JSDOM } = require('jsdom');
 const log = require('./util/logger');
 
-const cache = new TimedCache(9e5, (item) => request.get(`${GH_ROOT}${PAGES[item]}`)
+const WEB_ROOT = process.env.GH_ROOT || GH_ROOT;
+
+const cache = new TimedCache(9e5, (item) => request.get(`${WEB_ROOT}${PAGES[item]}`)
   .then(async(res) => {
     if (!res.text.startsWith('<!DOCTYPE html>')) return res.text;
     const dom = new JSDOM(res.text);
