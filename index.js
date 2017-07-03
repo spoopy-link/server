@@ -62,6 +62,8 @@ if (process.env.CACHE_KEY) {
   });
 }
 
+routes.slack(router);
+
 router.get(/\/json\/.+/, (req, res) => {
   isSpoopy(req.url.replace('/json/', ''))
     .then((output) => {
@@ -91,8 +93,6 @@ router.get(/\/.+/, (req, res) => {
     webCache.get('spoopy').then((t) => res.end(t));
   }
 });
-
-routes.slack(router);
 
 router.get(/.+/, (req, res) => {
   res.status(404).header('Content-Type', 'application/json; charset=utf-8');
