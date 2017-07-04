@@ -56,15 +56,14 @@ module.exports = (router) => {
     if (body.text === 'help') {
       res.status(200).end('Please see <https://spoopy.link/slack/support> for help \uD83D\uDC7B');
     } else {
+      res.status(200).end();
       isSpoopy(body.text.replace(/<|>/g, ''))
         .then((output) => {
-          res.status(200).end();
           request.post(body.response_url)
             .send(serializers.slack(output))
             .end();
         })
         .catch((err) => {
-          res.status(500).end(Constants.SERVER_ERR_MESSAGE);
           request.post(body.response_url)
             .send(Constants.SERVER_ERR_MESSAGE)
             .end();
