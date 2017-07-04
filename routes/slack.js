@@ -65,7 +65,7 @@ module.exports = (router) => {
         })
         .catch((err) => {
           request.post(body.response_url)
-            .send(Constants.SERVER_ERR_MESSAGE)
+            .send({ text: Constants.SERVER_ERR_MESSAGE })
             .end();
           log('SLACK/POST', err);
         });
