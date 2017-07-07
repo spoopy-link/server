@@ -5,6 +5,8 @@ module.exports = (router) => {
   router.get(STATIC_RE, (req, res) => {
     res.header('Content-Type', {
       js: 'application/javascript',
+      json: 'application/json',
+      webapp: 'application/json',
       css: 'text/css',
       xml: 'application/xml',
       txt: 'text/plain',

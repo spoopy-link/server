@@ -47,6 +47,8 @@ const STATIC = [
   'keybase.txt',
   'search.xml',
   'sw.js',
+  'manifest.webapp',
+  'manifest.json',
 ];
 
 exports.STATIC_RE = new RegExp(`/(${STATIC.join('|')})`);
