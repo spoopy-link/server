@@ -35,15 +35,21 @@ exports.SLACK_OAUTH = {
 exports.PAGES = {
   index: '/index.html',
   spoopy: '/404.html',
-  search_xml: '/opensearch.xml',
   slack_index: '/slack/index.html',
   slack_privacy: '/slack/privacy.html',
   slack_support: '/slack/support.html',
   slack_callback: '/slack/callback.html',
-  css: '/main.css',
-  js: '/main.js',
-  keybase: '/keybase.txt',
 };
+
+const STATIC = [
+  'main.js',
+  'main.css',
+  'keybase.txt',
+  'search.xml',
+  'sw.js',
+];
+
+exports.STATIC_RE = new RegExp(`/(${STATIC.join('|')})`);
 
 exports.GH_ROOT = 'https://raw.githubusercontent.com/spoopy-link/site/master';
 
