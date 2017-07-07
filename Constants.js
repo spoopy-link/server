@@ -35,6 +35,7 @@ exports.SLACK_OAUTH = {
 exports.PAGES = {
   index: '/index.html',
   spoopy: '/404.html',
+  search_xml: '/opensearch.xml',
   slack_index: '/slack/index.html',
   slack_privacy: '/slack/privacy.html',
   slack_support: '/slack/support.html',

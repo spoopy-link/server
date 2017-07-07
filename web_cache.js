@@ -11,19 +11,27 @@ const cache = new TimedCache(9e5, (item) => request.get(`${WEB_ROOT}${PAGES[item
   .then(async(res) => {
     if (!res.text.startsWith('<!DOCTYPE html>')) return res.text;
     const dom = new JSDOM(res.text);
-    const scripts = dom.window.document.querySelectorAll('script');
-    const styles = dom.window.document.querySelectorAll('link[rel=stylesheet]');
+    const document = dom.window.document;
+
+    const scripts = document.querySelectorAll('script');
+    const styles = document.querySelectorAll('link[rel=stylesheet]');
     for (const node of [...scripts, ...styles]) {
       if (!node.src && !node.href) continue;
       node.setAttribute('crossorigin', 'anonymous');
       let src = (node.src || node.href).replace(/^\//, '');
       src = /^https?:\/\//.test(src) ? src : `https://spoopy.link/${src}`;
-      await request.get(src)
-        .then((r) => {
-          node.setAttribute('integrity', `sha384-${crypto.createHash('sha384').update(r.text).digest('base64')}`);
-        })
-        .catch(log);
+      await request.get(src).then((r) => {
+        node.setAttribute('integrity', `sha384-${crypto.createHash('sha384').update(r.text).digest('base64')}`);
+      })
+      .catch(log);
     }
+
+    const search = document.createElement('LINK');
+    search.setAttribute('type', 'application/opensearchdescription+xml');
+    search.setAttribute('rel', 'search');
+    search.setAttribute('href', '/search.xml');
+    document.head.appendChild(search);
+
     return dom.serialize();
   })
   .catch((err) => {
