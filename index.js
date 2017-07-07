@@ -80,7 +80,7 @@ router.get(/\/api\/v(.+?)\/.+/, (req, res) => {
     })
     .catch((err) => {
       res.header('Content-Type', 'application/json; charset=utf-8');
-      res.end({ error: Constants.SERVER_ERR_MESSAGE });
+      res.status(500).end({ error: Constants.SERVER_ERR_MESSAGE });
       log('JSON', err);
     });
 });
