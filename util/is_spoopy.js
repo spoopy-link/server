@@ -33,7 +33,10 @@ module.exports = async function isSpoopy(url) {
           reasons: [],
         };
         if (chain[i].err) {
-          if (chain[i].err.message.includes('certificate')) scan.reasons.push('SSL');
+          if (
+            Constants.SSL_ERRORS.includes(chain[i].err.code) ||
+            chain[i].err.message.includes('certificate')
+          ) scan.reasons.push('SSL');
           else scan.reasons.push('INVALID');
         }
         if (blacklist.includes(URL(scan.url).hostname)) {
