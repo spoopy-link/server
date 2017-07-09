@@ -42,6 +42,7 @@ exports.PAGES = {
 };
 
 const STATIC = [
+  'fetch.js',
   'main.js',
   'main.css',
   'keybase.txt',
