@@ -48,7 +48,8 @@ function redirects(url, last) {
         }
       });
       request.on('error', (err) => {
-        last.promise.reject(err);
+        last.urls.push({ err, url: last.urls.pop() });
+        last.promise.resolve(last.urls);
       });
     } catch (err) {
       log('INVALID URL', url);

@@ -28,10 +28,14 @@ module.exports = async function isSpoopy(url) {
     .then(async (chain) => {
       for (const i in chain) {
         const scan = {
-          url: chain[i],
+          url: chain[i].url || chain[i],
           safe: true,
           reasons: [],
         };
+        if (chain[i].err) {
+          if (chain[i].err.message.includes('certificate')) scan.reasons.push('SSL');
+          else scan.reasons.push('INVALID');
+        }
         if (blacklist.includes(URL(scan.url).hostname)) {
           scan.reasons.push(Constants.REASONS.UNSAFE_LINK);
         }
