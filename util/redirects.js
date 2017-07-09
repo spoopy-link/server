@@ -5,6 +5,9 @@ const Constants = require('../Constants');
 const bodyRedirect = require('./body_redirect');
 const log = require('./logger');
 
+const ocsp = require('ocsp');
+const ocspAgent = new ocsp.Agent();
+
 function redirects(url, last) {
   if (!URL(url)) return Promise.reject(new Error('invalid url'));
   if (!last) {
@@ -20,6 +23,7 @@ function redirects(url, last) {
     try {
       const options = URL.parse(url);
       options.headers = { 'User-Agent': Constants.UA };
+      options.agent = ocspAgent;
       const request = (url.startsWith('https') ? https : http).get(options, (res) => {
         if ([300, 301, 302, 303].includes(res.statusCode)) {
           const newURL = /^https?:\/\//i.test(res.headers.location) ?

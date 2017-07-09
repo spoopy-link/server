@@ -35,7 +35,7 @@ module.exports = async function isSpoopy(url) {
         if (chain[i].err) {
           if (
             Constants.SSL_ERRORS.includes(chain[i].err.code) ||
-            chain[i].err.message.includes('certificate')
+            /(certificate|ocsp)/i.test(chain[i].err.message)
           ) scan.reasons.push('SSL');
           else scan.reasons.push('INVALID');
         }

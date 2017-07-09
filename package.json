@@ -6,7 +6,8 @@
   "dependencies": {
     "dotenv": "^4.0.0",
     "jsdom": "^11.0.0",
-    "promise_util": "gist:15f2c9675c3faa9df0d63223e283ad35",
+    "ocsp": "github:spoopy-link/ocsp",
+    "promise_util": "^1.0.0",
     "snekfetch": "^3.2.0"
   },
   "devDependencies": {
