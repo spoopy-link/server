@@ -32,9 +32,11 @@ module.exports = async function isSpoopy(url) {
           safe: true,
           reasons: [],
         };
+
         if (chain[i].err) {
           if (
             Constants.SSL_ERRORS.includes(chain[i].err.code) ||
+            /OCSP/.test(chain[i].err.code) ||
             /(certificate|ocsp)/i.test(chain[i].err.message)
           ) scan.reasons.push('SSL');
           else scan.reasons.push('INVALID');
