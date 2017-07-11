@@ -1,13 +1,14 @@
 require('dotenv').config();
 require('promise_util');
 const http = require('http');
+const querystring = require('querystring');
+const WebSocket = require('ws');
 const Router = require('./server/Router');
 const Constants = require('./Constants');
 const serializers = require('./serializers');
-const querystring = require('querystring');
 const webCache = require('./web_cache');
 const log = require('./util/logger');
-const isSpoopy = require('./util/is_spoopy');
+const follow = require('./util/follow');
 
 const server = http.createServer();
 const router = new Router(server);
@@ -64,16 +65,16 @@ if (process.env.CACHE_KEY) {
 
 routes.slack(router);
 
-router.get(/\/api\/v(.+?)\/.+/, (req, res) => {
+router.get(Constants.API_RE, (req, res) => {
   const version = req.match[1];
-  const serializer = serializers.api[`v${version}`];
+  const serializer = serializers.api[`v${version}`] || serializers.api.current;
   if (!serializer) {
     res.status(404).header('Content-Type', 'application/json; charset=utf-8');
     res.end({ message: Constants.SERVER_404_MESSAGE });
     return;
   }
 
-  isSpoopy(req.url.replace(`/api/v${version}/`, ''))
+  follow(req.url.replace(/\/api(?:\/v(.+?))?\//, ''))
     .then((output) => {
       res.header('Content-Type', 'application/json; charset=utf-8');
       res.end(serializer(output));
@@ -85,22 +86,9 @@ router.get(/\/api\/v(.+?)\/.+/, (req, res) => {
     });
 });
 
-router.get(/\/api\/.+/, (req, res) => {
-  isSpoopy(req.url.replace('/api/', ''))
-    .then((output) => {
-      res.header('Content-Type', 'application/json; charset=utf-8');
-      res.end(serializers.api.current(output));
-    })
-    .catch((err) => {
-      res.header('Content-Type', 'application/json; charset=utf-8');
-      res.end({ error: Constants.SERVER_ERR_MESSAGE });
-      log('API/CURRENT', err);
-    });
-});
-
 router.get(/\/.+/, (req, res) => {
   if (req.needsOG) {
-    isSpoopy(req.url.slice(1))
+    follow(req.url.slice(1))
       .then((output) => {
         res.header('Content-Type', 'text/html; charset=utf-8');
         res.end(serializers.og(output));
@@ -120,6 +108,17 @@ router.get(/.+/, (req, res) => {
   res.end({ message: Constants.SERVER_404_MESSAGE });
 });
 
+const wss = new WebSocket.Server({ server });
+wss.on('connection', (ws, req) => {
+  follow(req.url.slice(1), (link) => {
+    ws.send(JSON.stringify(link));
+  }).then((o) => {
+    ws.send(JSON.stringify(o));
+    ws.close();
+  });
+});
+
 server.listen(Constants.SERVER_PORT);
 
 process.on('unhandledRejection', log);
+process.on('uncaughtException', log);
