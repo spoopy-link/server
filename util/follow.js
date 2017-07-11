@@ -1,7 +1,7 @@
 require('promise_util');
 const http = require('http');
 const https = require('https');
-const ocsp = require('../../ocsp');
+const ocsp = require('ocsp');
 const URL = require('./url');
 const Constants = require('../Constants');
 const checkURL = require('./checkURL');
