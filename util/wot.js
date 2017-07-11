@@ -68,10 +68,10 @@ function wot(host) {
       .map(([name, value]) => [Categories[name], value])
       .reduce((o, [n, v]) => { o[n] = v; return o; }, {}) : null;
 
-    let safe = !Object.keys(body.categories)
-      .filter(x => x < 300 || x > 400 && x < 404).length;
+    let safe = body.categories ? !Object.keys(body.categories)
+      .filter(x => x < 300 || x > 400 && x < 404).length : true;
 
-    if (components.child_safety[0] < 90) safe = false;
+    if (components.child_safety && components.child_safety[0] < 90) safe = false;
 
     return {
       safe,
