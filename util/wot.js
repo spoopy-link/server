@@ -68,11 +68,13 @@ function wot(host) {
       .map(([name, value]) => [Categories[name], value])
       .reduce((o, [n, v]) => { o[n] = v; return o; }, {}) : null;
 
-    // not quite sure how to calculate this in a meaningful way yet :<
-    let score = 0;
+    let safe = !Object.keys(body.categories)
+      .filter(x => x < 300 || x > 400 && x < 404).length;
+
+    if (components.child_safety[0] < 90) safe = false;
 
     return {
-      score,
+      safe,
       components,
       categories: categories || {},
       blacklists: body.blacklists || {},
