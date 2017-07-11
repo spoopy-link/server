@@ -7,6 +7,7 @@ const Constants = require('../Constants');
 const checkURL = require('./checkURL');
 const bodyRedirect = require('./body_redirect');
 const hsts = require('./hsts');
+const log = require('./logger');
 
 async function follow(link, handler) {
   link = link
@@ -26,11 +27,15 @@ async function follow(link, handler) {
       return !ret.chain.some((t) => !t.safe);
     },
   };
+
   const handle = (o) => {
     if (handler) handler(o);
     ret.chain.push(o);
   };
+
   const promise = Promise.create();
+  promise.then(() => log('SCAN', link, `safe=${ret.safe}`));
+
   (function redirects(url) {
     const options = URL.parse(url);
     options.headers = { 'User-Agent': Constants.UA };
