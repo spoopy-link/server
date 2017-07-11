@@ -58,12 +58,17 @@ async function follow(link, handler) {
           URL.resolve(url, res.headers.location);
         redirects(newURL);
       } else {
+        let done = false;
         const chunks = [];
         res.on('data', (chunk) => chunks.push(chunk));
-        const finish = () => promise.resolve(ret);
+        const finish = () => {
+          done = true;
+          promise.resolve(ret);
+        }
         const timeout = setTimeout(finish, 750);
         res.on('end', () => {
-          if (!promise.isPending) return;
+          if (done) return;
+          done = true;
           clearTimeout(timeout);
           bodyRedirect(Buffer.concat(chunks).toString(), 750)
             .then(redirects)
