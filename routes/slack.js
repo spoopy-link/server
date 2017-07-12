@@ -57,7 +57,7 @@ module.exports = (router) => {
       res.status(200).end('Please see <https://spoopy.link/slack/support> for help \uD83D\uDC7B');
     } else {
       res.status(200).end();
-      follow(body.text.replace(/<|>/g, ''))
+      follow(body.text.split('|')[0].replace(/<|>/g, ''))
         .then((output) => {
           request.post(body.response_url)
             .send(serializers.slack(output))
