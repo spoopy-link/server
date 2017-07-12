@@ -41,9 +41,9 @@ async function follow(link, handler) {
     options.headers = { 'User-Agent': Constants.UA };
     if (url.startsWith('https')) options.agent = new ocsp.Agent();
     const request = (url.startsWith('https') ? https : http).get(options);
-    const x = (res) => {
+    const x = async (res) => {
       const error = res instanceof Error ? res : null;
-      const reasons = checkURL(url, error);
+      const reasons = await checkURL(url, error);
       handle({
         url, reasons,
         safe: reasons.length === 0,

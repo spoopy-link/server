@@ -23,7 +23,8 @@ function cache() {
       if (Array.isArray(res.body)) phish = res.body;
       caching.resolve(true);
       caching = null;
-    });
+    })
+    .catch(() => log('PHISHTANK', 'Failed'));
   return caching;
 }
 
