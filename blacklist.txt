@@ -35,8 +35,8 @@ hackfȯrums.com
 imgúr.com
 battlė.net
 us.battlė.net
-eu.battlė.net	
-webprofile.me	
+eu.battlė.net
+webprofile.me
 iplogger.ru
 2no.co
 yip.su
@@ -44,3 +44,7 @@ rikiki.net
 imger.cf
 youtube.gq
 media-bo.appspot.com
+ps3cfw.com
+freebooter.pro
+urlz.fr
+vbooter.org
