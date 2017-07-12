@@ -59,25 +59,17 @@ function wot(host) {
   .then((res) => {
     const body = JSON.parse(res.body)[host];
 
-    const components = {
-      trustworthiness: body[0],
-      child_safety: body[4],
-    };
-
-    const categories = body.categories ? Object.entries(body.categories)
-      .map(([name, value]) => [Categories[name], value])
-      .reduce((o, [n, v]) => { o[n] = v; return o; }, {}) : null;
-
-    let safe = body.categories ? !Object.keys(body.categories)
-      .filter(x => x < 300 || x > 400 && x < 404).length : true;
-
-    if (components.child_safety && components.child_safety[0] < 90) safe = false;
+    const reasons = [];
+    if (body[0] && body[0][0] < 90) reasons.push('CHILD_SAFETY');
+    if (body.categores) {
+      reasons.push(...Object.entries(body.categories)
+        .filter(([k]) => k < 300 || (k > 400 && k < 404))
+        .reduce((o, [n, v]) => { o[Categories[n]] = v; return o; }, {}));
+    }
 
     return {
-      safe,
-      components,
-      categories: categories || {},
-      blacklists: body.blacklists || {},
+      safe: !reasons.length,
+      reasons,
     };
   });
 }

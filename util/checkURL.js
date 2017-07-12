@@ -26,11 +26,7 @@ async function check(url, error) {
   }
   if (phishtank(url)) reasons.push(Constants.REASONS.PHISHTANK);
   const wotScore = await wot(hostname);
-  if (!wotScore.safe) {
-    const wotReasons = Object.keys(wotScore.categories).filter(x => !['GOOD_SITE', 'SITE_FOR_KIDS'].includes(x));
-    if (wotReasons.length) reasons.push(...wotReasons);
-    else reasons.push('WOT');
-  }
+  if (!wotScore.safe) reasons.push(...wotScore.reasons);
   return reasons;
 }
 
