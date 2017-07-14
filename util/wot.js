@@ -60,11 +60,13 @@ function wot(host) {
     const body = JSON.parse(res.body)[host];
 
     const reasons = [];
-    if (body[0] && body[0][0] < 90) reasons.push('CHILD_SAFETY');
-    if (body.categores) {
-      reasons.push(...Object.entries(body.categories)
-        .filter(([k]) => k < 300 || (k > 400 && k < 404))
-        .reduce((o, [n, v]) => { o[Categories[n]] = v; return o; }, {}));
+    if (body) {
+      if (body[0] && body[0][0] < 90) reasons.push('CHILD_SAFETY');
+      if (body.categores) {
+        reasons.push(...Object.entries(body.categories)
+          .filter(([k]) => k < 300 || (k > 400 && k < 404))
+          .reduce((o, [n, v]) => { o[Categories[n]] = v; return o; }, {}));
+      }
     }
 
     return {
