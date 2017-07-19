@@ -1,5 +1,6 @@
 const request = require('snekfetch');
 
+/*
 const Reputation = [
   'VERY_POOR',
   'POOR',
@@ -12,6 +13,7 @@ const Components = {
   0: 'TRUSTWORTINESS',
   4: 'CHILD_SAFETY',
 };
+*/
 
 const Categories = {
   // NEGATIVE
@@ -56,24 +58,24 @@ const Categories = {
 
 function wot(host) {
   return request.get(`https://api.mywot.com/0.4/public_link_json2?hosts=${host}/&key=${process.env.WOT_KEY}`)
-  .then((res) => {
-    const body = JSON.parse(res.body)[host];
+    .then((res) => {
+      const body = JSON.parse(res.body)[host];
 
-    const reasons = [];
-    if (body) {
-      if (body[0] && body[0][0] < 90) reasons.push('CHILD_SAFETY');
-      if (body.categores) {
-        reasons.push(...Object.entries(body.categories)
-          .filter(([k]) => k < 300 || (k > 400 && k < 404))
-          .reduce((o, [n, v]) => { o[Categories[n]] = v; return o; }, {}));
+      const reasons = [];
+      if (body) {
+        if (body[4] && body[4][0] < 90) reasons.push('CHILD_SAFETY');
+        if (body.categores) {
+          reasons.push(...Object.entries(body.categories)
+            .filter(([k]) => k < 300 || (k > 400 && k < 404))
+            .reduce((o, [n, v]) => { o[Categories[n]] = v; return o; }, {}));
+        }
       }
-    }
 
-    return {
-      safe: !reasons.length,
-      reasons,
-    };
-  });
+      return {
+        safe: !reasons.length,
+        reasons,
+      };
+    });
 }
 
 module.exports = wot;
