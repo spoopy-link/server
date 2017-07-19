@@ -20,7 +20,7 @@ router.use((req, res, next) => {
   req.needsOG = Constants.UA_REGEX.test(req.headers['user-agent']);
   res.header('Content-Security-Policy', [
     "default-src 'self' s.gus.host www.google-analytics.com cdn.rawgit.com",
-    "script-src 'self' 'strict-dynamic' 'nonce-inline' s.gus.host www.google-analytics.com cdn.rawgit.com",
+    "script-src 'self' 'nonce-inline' s.gus.host www.google-analytics.com cdn.rawgit.com",
     "img-src 'self' www.google-analytics.com",
   ].join(';'));
   res.headers({
