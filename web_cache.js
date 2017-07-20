@@ -7,7 +7,8 @@ const log = require('./util/logger');
 
 const WEB_ROOT = process.env.GH_ROOT || GH_ROOT;
 
-const cache = new TimedCache(9e5, (item) => request.get(`${WEB_ROOT}${item.startsWith('/') ? item : PAGES[item]}`)
+const cache = new TimedCache(9e5, (item) =>
+  request.get(`${WEB_ROOT}${item.startsWith('/') ? item : PAGES[item]}`)
   .then(async(res) => {
     if (!res.text.startsWith('<!DOCTYPE html>')) return res.text;
     const dom = new JSDOM(res.text);
@@ -19,7 +20,7 @@ const cache = new TimedCache(9e5, (item) => request.get(`${WEB_ROOT}${item.start
       if (!node.src && !node.href) continue;
       node.setAttribute('crossorigin', 'anonymous');
       let src = (node.src || node.href).replace(/^\//, '');
-      src = /^https?:\/\//.test(src) ? src : `https://spoopy.link/${src}`;
+      src = /^https?:\/\//.test(src) ? src : `${WEB_ROOT}${src.startsWith('/') ? '' : '/'}${src}`;
       await request.get(src).then((r) => {
         node.setAttribute('integrity', `sha384-${crypto.createHash('sha384').update(r.text).digest('base64')}`);
       })
