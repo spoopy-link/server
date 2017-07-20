@@ -22,6 +22,7 @@ router.use((req, res, next) => {
     "default-src 'self' s.gus.host www.google-analytics.com cdn.rawgit.com",
     "script-src 'self' 'nonce-inline' s.gus.host www.google-analytics.com cdn.rawgit.com",
     "img-src 'self' www.google-analytics.com",
+    "connect-src 'self' wss: ws:",
   ].join(';'));
   res.headers({
     'X-XSS-Protection': '1; mode=block',
