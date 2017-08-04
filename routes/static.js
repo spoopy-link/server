@@ -3,7 +3,7 @@ const { STATIC_RE } = require('../Constants');
 
 module.exports = (router) => {
   router.get(STATIC_RE, (req, res) => {
-    res.header('Content-Type', {
+    res.header('Content-Type', { // eslint-disable-line prefer-template
       js: 'application/javascript',
       json: 'application/json',
       webapp: 'application/json',

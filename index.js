@@ -16,15 +16,19 @@ router.cache = webCache;
 
 const routes = require('./routes');
 
+const CSP_HEADERS = [
+  "default-src 'self' s.gus.host www.google-analytics.com cdn.rawgit.com",
+  "script-src 'self' 'nonce-inline' s.gus.host www.google-analytics.com cdn.rawgit.com",
+  "img-src 'self' www.google-analytics.com",
+  "connect-src 'self' wss: ws:",
+];
+if (process.env.CSP_REPORT_URI) CSP_HEADERS.push(`report-uri ${process.env.CSP_REPORT_URI}`);
+const CSP_HEADER = CSP_HEADERS.join('; ');
+
 router.use((req, res, next) => {
   req.needsOG = Constants.UA_REGEX.test(req.headers['user-agent']);
-  res.header('Content-Security-Policy', [
-    "default-src 'self' s.gus.host www.google-analytics.com cdn.rawgit.com",
-    "script-src 'self' 'nonce-inline' s.gus.host www.google-analytics.com cdn.rawgit.com",
-    "img-src 'self' www.google-analytics.com",
-    "connect-src 'self' wss: ws:",
-  ].join(';'));
   res.headers({
+    'Content-Security-Policy': CSP_HEADER,
     'X-XSS-Protection': '1; mode=block',
     'X-Frame-Options': 'DENY',
     'X-Content-Type-Options': 'nosniff',
