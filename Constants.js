@@ -84,7 +84,7 @@ exports.SSL_ERRORS = [
   'CERT_REJECTED',
 ];
 
-exports.API_RE = /\/api(?:\/v(.+?))?\/.+/;
+exports.API_RE = /\/api(?:\/v(.+?))?(\/expand)?\/(.+)/;
 
 function keyMirror(arr) {
   return arr.reduce((o, i) => {

@@ -79,7 +79,9 @@ router.get(Constants.API_RE, (req, res) => {
     return;
   }
 
-  follow(req.url.replace(/\/api(?:\/v(.+?))?\//, ''))
+  const expand = !!req.match[2];
+
+  follow(req.match[3])
     .then((output) => {
       res.header('Content-Type', 'application/json; charset=utf-8');
       res.end(serializer(output));

@@ -9,7 +9,7 @@ const bodyRedirect = require('./body_redirect');
 const hsts = require('./hsts');
 const log = require('./logger');
 
-async function follow(link, handler) {
+async function follow(link, handler, noscan = false) {
   link = link
     // Fuck discord
     .replace(/(https?):\/([^/])/, (_, protocol, x) => `${protocol}://${x}`)
@@ -43,7 +43,7 @@ async function follow(link, handler) {
     const request = (url.startsWith('https') ? https : http).get(options);
     const x = async(res) => {
       const error = res instanceof Error ? res : null;
-      const reasons = await checkURL(url, error);
+      const reasons = noscan === true ? [] : await checkURL(url, error);
       handle({
         url, reasons,
         safe: reasons.length === 0,
@@ -76,8 +76,8 @@ async function follow(link, handler) {
         });
       }
     };
-    request.on('error', x);
-    request.on('response', x);
+    request.once('error', x);
+    request.once('response', x);
   }(link));
   return promise;
 }
