@@ -79,9 +79,7 @@ router.get(Constants.API_RE, (req, res) => {
     return;
   }
 
-  const expand = !!req.match[2];
-
-  follow(req.match[3])
+  follow(req.match[3], null, !!req.match[2])
     .then((output) => {
       res.header('Content-Type', 'application/json; charset=utf-8');
       res.end(serializer(output));
