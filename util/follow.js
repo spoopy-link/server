@@ -9,6 +9,15 @@ const bodyRedirect = require('./body_redirect');
 const hsts = require('./hsts');
 const log = require('./logger');
 
+const cache = {
+  get(key) {
+    const i = this[key];
+    if (!i || i && Date.now() - i.time > 172800000) return null;
+    return i.data;
+  },
+  set(name, data) { this[name] = { data, time: Date.now() }; },
+};
+
 async function follow(link, handler, noscan = false) {
   link = link
     // Fuck discord
@@ -20,6 +29,10 @@ async function follow(link, handler, noscan = false) {
     const preloaded = await hsts(link.split(/[/?]/)[0]);
     link = `http${preloaded ? 's' : ''}://${link}`;
   }
+
+  const cache_key = link + noscan;
+  const cached = cache.get(cache_key);
+  if (cached) return cached;
 
   const ret = {
     chain: [],
@@ -34,7 +47,10 @@ async function follow(link, handler, noscan = false) {
   };
 
   const promise = Promise.create();
-  promise.then(() => log('SCAN', link, `safe=${ret.safe}`));
+  promise.then(() => {
+    log('SCAN', link, `safe=${ret.safe}`);
+    cache.set(cache_key, ret);
+  });
 
   (function redirects(url) {
     const options = URL.parse(url);
