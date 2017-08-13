@@ -20,7 +20,7 @@ const CSP_HEADERS = [
   "default-src 'self' s.gc.gy www.google-analytics.com cdn.rawgit.com",
   "script-src 'self' 'nonce-inline' s.gc.gy www.google-analytics.com cdn.rawgit.com",
   "img-src 'self' www.google-analytics.com",
-  "connect-src 'self' wss: ws:",
+  "connect-src 'self' wss: ws: s.gc.gy",
 ];
 if (process.env.CSP_REPORT_URI) CSP_HEADERS.push(`report-uri ${process.env.CSP_REPORT_URI}`);
 const CSP_HEADER = CSP_HEADERS.join('; ');
