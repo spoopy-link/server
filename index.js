@@ -17,8 +17,8 @@ router.cache = webCache;
 const routes = require('./routes');
 
 const CSP_HEADERS = [
-  "default-src 'self' s.gus.host www.google-analytics.com cdn.rawgit.com",
-  "script-src 'self' 'nonce-inline' s.gus.host www.google-analytics.com cdn.rawgit.com",
+  "default-src 'self' s.gc.gy www.google-analytics.com cdn.rawgit.com",
+  "script-src 'self' 'nonce-inline' s.gc.gy www.google-analytics.com cdn.rawgit.com",
   "img-src 'self' www.google-analytics.com",
   "connect-src 'self' wss: ws:",
 ];
