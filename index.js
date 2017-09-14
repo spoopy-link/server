@@ -18,7 +18,7 @@ const routes = require('./routes');
 
 const CSP_HEADERS = [
   "default-src 'self' s.gc.gy www.google-analytics.com cdn.rawgit.com",
-  "script-src 'self' 'nonce-inline' s.gc.gy www.google-analytics.com cdn.rawgit.com",
+  "script-src 'self' 'nonce-inline' gus.host s.gc.gy www.google-analytics.com cdn.rawgit.com",
   "img-src 'self' www.google-analytics.com",
   "connect-src 'self' wss: ws: s.gc.gy",
 ];
@@ -28,7 +28,7 @@ const CSP_HEADER = CSP_HEADERS.join('; ');
 router.use((req, res, next) => {
   req.needsOG = Constants.UA_REGEX.test(req.headers['user-agent']);
   res.headers({
-    'Content-Security-Policy': CSP_HEADER,
+    // 'Content-Security-Policy': CSP_HEADER,
     'X-XSS-Protection': '1; mode=block',
     'X-Frame-Options': 'DENY',
     'X-Content-Type-Options': 'nosniff',
