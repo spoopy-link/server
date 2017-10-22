@@ -12,7 +12,7 @@ const log = require('./logger');
 const cache = {
   get(key) {
     const i = this[key];
-    if (!i || i && Date.now() - i.time > 172800000) return null;
+    if (!i || (i && Date.now() - i.time > 172800000)) return null;
     return i.data;
   },
   set(name, data) { this[name] = { data, time: Date.now() }; },
@@ -32,7 +32,10 @@ async function follow(link, handler, noscan = false) {
 
   const cache_key = link + noscan;
   const cached = cache.get(cache_key);
-  if (cached) return cached;
+  if (cached) {
+    for (const item of cached.chain) handler(item);
+    return cached;
+  }
 
   const ret = {
     chain: [],
