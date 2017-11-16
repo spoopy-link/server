@@ -123,7 +123,7 @@ wss.on('connection', (ws, req) => {
   });
 });
 
-server.listen(Constants.SERVER_PORT);
+server.listen('/tmp/spoopy.link.sock');
 
 process.on('unhandledRejection', log);
 process.on('uncaughtException', log);

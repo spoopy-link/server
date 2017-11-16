@@ -5,8 +5,6 @@ exports.TICKS = {
   red: 'https://cdn.discordapp.com/emojis/312314733816709120.png',
 };
 
-exports.SERVER_PORT = 5000;
-
 exports.SERVER_ERR_MESSAGE = 'Checking url failed... Maybe your url is bad?';
 exports.SERVER_404_MESSAGE = 'OOOOOooOOOooooooo this page is haunted by the ghost of the spoopy 404';
 exports.UA = 'Mozilla/5.0 (compatible; spoopy.link/1.0; +https://spoopy.link)';
