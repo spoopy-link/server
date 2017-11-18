@@ -1,5 +1,6 @@
 require('dotenv').config();
 require('promise_util');
+const fs = require('fs');
 const http = require('http');
 const querystring = require('querystring');
 const WebSocket = require('ws');
@@ -123,7 +124,10 @@ wss.on('connection', (ws, req) => {
   });
 });
 
-server.listen('/tmp/spoopy.link.sock');
+const f = '/tmp/spoopy.link.sock';
+fs.unlinkSync(f);
+server.listen(f);
+fs.chmodSync(f, '777');
 
 process.on('unhandledRejection', log);
 process.on('uncaughtException', log);
