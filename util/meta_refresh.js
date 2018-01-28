@@ -5,7 +5,8 @@ function parseMetaRefresh(content) {
   content = pattern.exec(content);
 
   if (content !== null)	{
-    if (content[1] !== undefined) result.timeout = parseInt(content[1]);
+    if (content[1] !== undefined)
+      result.timeout = parseInt(content[1]);
 
     if (content[2] !== undefined) {
       let url = content[2].trim();
@@ -15,7 +16,8 @@ function parseMetaRefresh(content) {
 
       if ((firstChar === "'" && lastChar === "'") || (firstChar === '"' && lastChar === '"')) {
         url = url.length > 2 ? url = url.substr(1, url.length - 2).trim() : 2;
-        if (url === '') url = null;
+        if (url === '')
+          url = null;
       }
 
       result.url = url;

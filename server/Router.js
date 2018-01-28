@@ -14,8 +14,10 @@ class Router {
       const match = typeof route.route === 'string' ?
         route.route === req.url :
         req.url.match(route.route);
-      if (!match) continue;
-      if (match !== true) req.match = match;
+      if (!match)
+        continue;
+      if (match !== true)
+        req.match = match;
       route.handler(req, response);
       break;
     }

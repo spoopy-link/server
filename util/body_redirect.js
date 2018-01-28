@@ -14,7 +14,8 @@ module.exports = function bodyRedirect(html, time) {
   let dom;
 
   const finish = (url) => {
-    if (done) return;
+    if (done)
+      return;
     clearTimeout(timeout);
     promise.resolve(url);
   };
@@ -27,7 +28,8 @@ module.exports = function bodyRedirect(html, time) {
   });
 
   const tag = (function repeat(obj) {
-    if (!obj.childNodes) return;
+    if (!obj.childNodes)
+      return;
     for (const node of obj.childNodes) {
       if (
         node.nodeName === 'META' &&
@@ -41,7 +43,8 @@ module.exports = function bodyRedirect(html, time) {
       }
     }
   }(dom.window.document.head));
-  if (tag) finish(parseMetaRefresh(tag).url);
+  if (tag)
+    finish(parseMetaRefresh(tag).url);
 
   return promise;
 };

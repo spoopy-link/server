@@ -17,16 +17,20 @@ async function check(url, error) {
       Constants.SSL_ERRORS.includes(error.code) ||
       /OCSP/.test(error.code) ||
       /(certificate|ocsp)/i.test(error.message)
-    ) reasons.push('SSL');
-    else reasons.push('INVALID');
+    )
+      reasons.push('SSL');
+    else
+      reasons.push('INVALID');
   }
   const hostname = URL(url).hostname;
-  if (blacklist.includes(hostname)) {
+  if (blacklist.includes(hostname))
     reasons.push(Constants.REASONS.UNSAFE_LINK);
-  }
-  if (phishtank(url)) reasons.push(Constants.REASONS.PHISHTANK);
+
+  if (phishtank(url))
+    reasons.push(Constants.REASONS.PHISHTANK);
   const wotScore = await wot(hostname);
-  if (!wotScore.safe) reasons.push(...wotScore.reasons);
+  if (!wotScore.safe)
+    reasons.push(...wotScore.reasons);
   return reasons;
 }
 

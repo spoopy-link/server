@@ -8,7 +8,8 @@ module.exports = function Response(res) {
       return this;
     },
     headers(obj) {
-      for (const [name, value] of Object.entries(obj)) this.header(name, value);
+      for (const [name, value] of Object.entries(obj))
+        this.header(name, value);
       return this;
     },
     status(c) {
@@ -17,7 +18,8 @@ module.exports = function Response(res) {
     },
     end(body) {
       res.writeHead(code, headers);
-      if (typeof body === 'object') body = JSON.stringify(body);
+      if (typeof body === 'object')
+        body = JSON.stringify(body);
       res.end(body);
     },
   });

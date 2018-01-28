@@ -10,14 +10,16 @@ const WEB_ROOT = process.env.GH_ROOT || GH_ROOT;
 const cache = new TimedCache(9e5, (item) =>
   request.get(`${WEB_ROOT}${item.startsWith('/') ? item : PAGES[item]}`)
     .then(async(res) => {
-      if (!res.text.startsWith('<!DOCTYPE html>')) return res.text;
+      if (!res.text.startsWith('<!DOCTYPE html>'))
+        return res.text;
       const dom = new JSDOM(res.text);
       const document = dom.window.document;
 
       const scripts = document.querySelectorAll('script');
       const styles = document.querySelectorAll('link[rel=stylesheet]');
       for (const node of [...scripts, ...styles]) {
-        if (!node.src && !node.href) continue;
+        if (!node.src && !node.href)
+          continue;
         node.setAttribute('crossorigin', 'anonymous');
         let src = (node.src || node.href).replace(/^\//, '');
         src = /^https?:\/\//.test(src) ? src : `${WEB_ROOT}${src.startsWith('/') ? '' : '/'}${src}`;

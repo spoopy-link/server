@@ -6,13 +6,15 @@ let phish = [];
 let caching;
 
 function phishtank(url) {
-  if (phish.length) return !!phish.find((p) => p.url === url);
+  if (phish.length)
+    return !!phish.find((p) => p.url === url);
   return false;
   // return cache().then(() => !!phish.find((p) => p.url === url));
 }
 
 function cache() {
-  if (caching) return caching;
+  if (caching)
+    return caching;
 
   log('PHISHTANK', 'Caching starting');
 
@@ -20,7 +22,8 @@ function cache() {
   request.get('https://data.phishtank.com/data/online-valid.json')
     .then((res) => {
       log('PHISHTANK', 'Caching finished');
-      if (Array.isArray(res.body)) phish = res.body;
+      if (Array.isArray(res.body))
+        phish = res.body;
       caching.resolve(true);
       caching = null;
     })

@@ -23,7 +23,8 @@ const CSP_HEADERS = [
   "img-src 'self' www.google-analytics.com",
   "connect-src 'self' wss: ws: s.gc.gy",
 ];
-if (process.env.CSP_REPORT_URI) CSP_HEADERS.push(`report-uri ${process.env.CSP_REPORT_URI}`);
+if (process.env.CSP_REPORT_URI)
+  CSP_HEADERS.push(`report-uri ${process.env.CSP_REPORT_URI}`);
 const CSP_HEADER = CSP_HEADERS.join('; ');
 
 router.use((req, res, next) => {
@@ -125,7 +126,9 @@ wss.on('connection', (ws, req) => {
 });
 
 const f = '/tmp/spoopy.link.sock';
-fs.unlinkSync(f);
+try {
+  fs.unlinkSync(f);
+} catch (err) {} // eslint-disable-line no-empty
 server.listen(f);
 fs.chmodSync(f, '777');
 
