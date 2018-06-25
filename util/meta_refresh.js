@@ -1,12 +1,14 @@
+'use strict';
+
 const pattern = /^\s*(\d+)(?:\s*;(?:\s*url\s*=)?\s*(.+)?)?$/i;
 
 function parseMetaRefresh(content) {
   const result = { timeout: null, url: null };
   content = pattern.exec(content);
 
-  if (content !== null)	{
+  if (content !== null) {
     if (content[1] !== undefined) {
-      result.timeout = parseInt(content[1]);
+      result.timeout = Number.parseInt(content[1], 10);
     }
 
 

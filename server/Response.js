@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function Response(res) {
   const headers = {};
   let code = 200;

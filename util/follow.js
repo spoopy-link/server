@@ -36,8 +36,8 @@ async function follow(link, handler, noscan = false) {
     link = `http${preloaded ? 's' : ''}://${link}`;
   }
 
-  const cache_key = link + noscan;
-  const cached = cache.get(cache_key);
+  const cacheKey = link + noscan;
+  const cached = cache.get(cacheKey);
   if (cached) {
     if (handler) {
       for (const item of cached.chain) {
@@ -62,7 +62,7 @@ async function follow(link, handler, noscan = false) {
     ret.chain.push(o);
   };
 
-  const promise = new Promise((resolve, reject) => {
+  const promise = new Promise((resolve) => {
     (function redirects(url) {
       const options = URL.parse(url);
       options.headers = { 'User-Agent': Constants.UA };
@@ -113,13 +113,13 @@ async function follow(link, handler, noscan = false) {
       request.once('error', x);
       request.once('response', x);
     }(link));
-
-
-    promise.then(() => {
-      log('SCAN', link, `safe=${ret.safe}`);
-      cache.set(cache_key, ret);
-    });
   });
+
+  promise.then(() => {
+    log('SCAN', link, `safe=${ret.safe}`);
+    cache.set(cacheKey, ret);
+  });
+
   return promise;
 }
 

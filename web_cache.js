@@ -17,13 +17,13 @@ const cache = new TimedCache(9e5, (item) =>
       }
 
       const dom = new JSDOM(res.text);
-      const document = dom.window.document;
+      const { document } = dom.window;
 
       const scripts = document.querySelectorAll('script');
       const styles = document.querySelectorAll('link[rel=stylesheet]');
       for (const node of [...scripts, ...styles]) {
         if (!node.src && !node.href) {
-          continue;
+          continue; // eslint-disable-line no-continue
         }
 
         node.setAttribute('crossorigin', 'anonymous');

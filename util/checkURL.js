@@ -1,3 +1,5 @@
+'use strict';
+
 const fs = require('fs');
 const Constants = require('../Constants');
 const URL = require('./url');
@@ -23,7 +25,7 @@ async function check(url, error) {
       reasons.push('INVALID');
     }
   }
-  const hostname = URL(url).hostname;
+  const { hostname } = URL(url);
   if (blacklist.includes(hostname)) {
     reasons.push(Constants.REASONS.UNSAFE_LINK);
   }

@@ -1,3 +1,5 @@
+'use strict';
+
 const querystring = require('querystring');
 const request = require('snekfetch');
 const Constants = require('../Constants');

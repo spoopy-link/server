@@ -1,19 +1,6 @@
+'use strict';
+
 const request = require('snekfetch');
-
-/*
-const Reputation = [
-  'VERY_POOR',
-  'POOR',
-  'UNSATISFACTORY',
-  'GOOD',
-  'EXCELLENT',
-];
-
-const Components = {
-  0: 'TRUSTWORTINESS',
-  4: 'CHILD_SAFETY',
-};
-*/
 
 const Categories = {
   // NEGATIVE

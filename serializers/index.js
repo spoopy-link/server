@@ -1,3 +1,5 @@
+'use strict';
+
 const { TICKS } = require('../Constants');
 
 module.exports = {

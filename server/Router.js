@@ -1,3 +1,5 @@
+'use strict';
+
 const Response = require('./Response');
 
 class Router {
@@ -15,7 +17,7 @@ class Router {
         route.route === req.url :
         req.url.match(route.route);
       if (!match) {
-        continue;
+        continue; // eslint-disable-line no-continue
       }
 
       if (match !== true) {

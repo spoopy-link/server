@@ -1,3 +1,5 @@
+'use strict';
+
 const path = require('path');
 const { STATIC_RE } = require('../Constants');
 
