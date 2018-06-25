@@ -77,7 +77,7 @@ async function follow(link, handler, noscan = false) {
         promise.resolve(ret);
         return;
       }
-      if ([300, 301, 302, 303].includes(res.statusCode)) {
+      if ([300, 301, 302, 303, 307].includes(res.statusCode)) {
         const newURL = /^https?:\/\//i.test(res.headers.location) ?
           res.headers.location :
           URL.resolve(url, res.headers.location);
