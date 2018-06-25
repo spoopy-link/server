@@ -5,18 +5,22 @@
   "main": "index.js",
   "dependencies": {
     "dotenv": "^4.0.0",
+    "eslint-config-airbnb": "^17.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.10.0",
     "jsdom": "^11.0.0",
     "ocsp": "github:spoopy-link/ocsp",
-    "promise_util": "^1.0.2",
     "snekfetch": "^3.3.0",
     "ws": "^3.0.0"
   },
   "devDependencies": {
-    "eslint": "^4.1.1"
+    "babel-eslint": "^8.2.5",
+    "eslint": "^4.19.1"
   },
   "scripts": {
     "start": "node index.js",
-    "lint": "eslint -c .eslintrc.json ."
+    "lint": "eslint -c .eslintrc.js ."
   },
   "repository": {
     "type": "git",

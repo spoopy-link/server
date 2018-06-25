@@ -1,3 +1,5 @@
+'use strict';
+
 exports.MAX_REDIRECTS = 4;
 
 exports.TICKS = {
@@ -17,6 +19,13 @@ exports.CORS_ORIGINS = [
   'http://gus.host',
   'https://gus.host',
 ];
+
+function keyMirror(arr) {
+  return arr.reduce((o, i) => {
+    o[i] = i;
+    return o;
+  }, {});
+}
 
 exports.REASONS = keyMirror([
   'UNSAFE_LINK',
@@ -83,10 +92,3 @@ exports.SSL_ERRORS = [
 ];
 
 exports.API_RE = /\/api(?:\/v(.+?))?(\/expand)?\/(.+)/;
-
-function keyMirror(arr) {
-  return arr.reduce((o, i) => {
-    o[i] = i;
-    return o;
-  }, {});
-}

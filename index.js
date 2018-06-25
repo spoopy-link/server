@@ -1,5 +1,6 @@
+'use strict';
+
 require('dotenv').config();
-require('promise_util');
 const fs = require('fs');
 const http = require('http');
 const querystring = require('querystring');
@@ -16,16 +17,6 @@ const router = new Router(server);
 router.cache = webCache;
 
 const routes = require('./routes');
-
-const CSP_HEADERS = [
-  "default-src 'self' s.gc.gy www.google-analytics.com cdn.rawgit.com",
-  "script-src 'self' 'nonce-inline' gus.host s.gc.gy www.google-analytics.com cdn.rawgit.com",
-  "img-src 'self' www.google-analytics.com",
-  "connect-src 'self' wss: ws: s.gc.gy",
-];
-if (process.env.CSP_REPORT_URI)
-  CSP_HEADERS.push(`report-uri ${process.env.CSP_REPORT_URI}`);
-const CSP_HEADER = CSP_HEADERS.join('; ');
 
 router.use((req, res, next) => {
   req.needsOG = Constants.UA_REGEX.test(req.headers['user-agent']);
@@ -131,6 +122,10 @@ try {
 } catch (err) {} // eslint-disable-line no-empty
 server.listen(f);
 fs.chmodSync(f, '777');
+
+process.on('exit', () => {
+  server.close();
+});
 
 process.on('unhandledRejection', log);
 process.on('uncaughtException', log);

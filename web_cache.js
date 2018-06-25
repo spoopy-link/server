@@ -1,25 +1,31 @@
+'use strict';
+
 const crypto = require('crypto');
 const request = require('snekfetch');
+const { JSDOM } = require('jsdom');
 const { PAGES, GH_ROOT, SERVER_404_MESSAGE } = require('./Constants');
 const TimedCache = require('./util/TimedCache');
-const { JSDOM } = require('jsdom');
 const log = require('./util/logger');
 
 const WEB_ROOT = process.env.GH_ROOT || GH_ROOT;
 
 const cache = new TimedCache(9e5, (item) =>
   request.get(`${WEB_ROOT}${item.startsWith('/') ? item : PAGES[item]}`)
-    .then(async(res) => {
-      if (!res.text.startsWith('<!DOCTYPE html>'))
+    .then(async (res) => {
+      if (!res.text.startsWith('<!DOCTYPE html>')) {
         return res.text;
+      }
+
       const dom = new JSDOM(res.text);
       const document = dom.window.document;
 
       const scripts = document.querySelectorAll('script');
       const styles = document.querySelectorAll('link[rel=stylesheet]');
       for (const node of [...scripts, ...styles]) {
-        if (!node.src && !node.href)
+        if (!node.src && !node.href) {
           continue;
+        }
+
         node.setAttribute('crossorigin', 'anonymous');
         let src = (node.src || node.href).replace(/^\//, '');
         src = /^https?:\/\//.test(src) ? src : `${WEB_ROOT}${src.startsWith('/') ? '' : '/'}${src}`;
@@ -41,8 +47,7 @@ const cache = new TimedCache(9e5, (item) =>
     .catch((err) => {
       log('FETCH', err);
       return SERVER_404_MESSAGE;
-    })
-);
+    }));
 
 cache.on('get', (state, item) => {
   log('CACHE ITEM', state, item);

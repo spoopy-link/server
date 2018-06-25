@@ -17,15 +17,13 @@ class TimedCache extends EventEmitter {
       if (Date.now() - this._cache[item].time < this.time) {
         this.emit('get', VALID, item);
         return Promise.resolve(this._cache[item].data);
-      } else {
-        this.emit('get', RECACHE, item);
-        this._fetch(item);
-        return Promise.resolve(this._cache[item].data);
       }
-    } else {
-      this.emit('get', INITIAL, item);
-      return this._fetch(item);
+      this.emit('get', RECACHE, item);
+      this._fetch(item);
+      return Promise.resolve(this._cache[item].data);
     }
+    this.emit('get', INITIAL, item);
+    return this._fetch(item);
   }
 
   _fetch(item) {

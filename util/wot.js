@@ -63,12 +63,16 @@ function wot(host) {
 
       const reasons = [];
       if (body) {
-        if (body[4] && body[4][0] < 70)
+        if (body[4] && body[4][0] < 70) {
           reasons.push('CHILD_SAFETY');
+        }
+
         if (body.categores) {
           reasons.push(...Object.entries(body.categories)
             .filter(([k]) => k < 300 || (k > 400 && k < 404))
-            .reduce((o, [n, v]) => { o[Categories[n]] = v; return o; }, {}));
+            .reduce((o, [n, v]) => {
+              o[Categories[n]] = v; return o;
+            }, {}));
         }
       }
 
