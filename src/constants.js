@@ -11,7 +11,7 @@ exports.SERVER_ERR_MESSAGE = 'Checking url failed... Maybe your url is bad?';
 exports.SERVER_404_MESSAGE = 'OOOOOooOOOooooooo this page is haunted by the ghost of the spoopy 404';
 exports.UA = 'Mozilla/5.0 (compatible; spoopy.link/1.0; +https://spoopy.link)';
 
-exports.UA_REGEX = /(Discord|Slack)Bot/i;
+exports.UA_BOT_REGEX = /(Discord|Slack)Bot/i;
 
 exports.CORS_ORIGINS = [
   'http://spoopy.link',
@@ -31,6 +31,7 @@ exports.REASONS = keyMirror([
   'UNSAFE_LINK',
   'REDIRECT_COUNT',
   'PHISHTANK',
+  'NO_HSTS',
 ]);
 
 exports.SLACK_OAUTH = {
@@ -61,7 +62,9 @@ const STATIC = [
 
 exports.STATIC_RE = new RegExp(`/(${STATIC.join('|')})`);
 
-exports.GH_ROOT = 'https://raw.githubusercontent.com/spoopy-link/site/master';
+exports.WEB_ROOT = process.env.WEB_ROOT || 'https://raw.githubusercontent.com/spoopy-link/site/master';
+exports.CACHE_KEY = process.env.CACHE_KEY;
+exports.WOT_KEY = process.env.WOT_KEY;
 
 exports.CHECK_JS = false;
 

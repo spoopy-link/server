@@ -1,3 +1,9 @@
+'use strict';
+
+const URL = require('url');
+const { BLACKLIST } = require('../constants').REASONS;
+
+const blacklist = `
 grabify.link
 iplogger.org
 iplogger.com
@@ -49,3 +55,14 @@ freebooter.pro
 urlz.fr
 vbooter.org
 xblfused.pw
+amazingsexdating.com
+`.split('\n').map(Boolean);
+
+module.exports = ({ domain }) => {
+
+  if (blacklist.includes(domain)) {
+    return [BLACKLIST];
+  }
+
+  return [];
+};

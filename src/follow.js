@@ -1,50 +1,18 @@
 'use strict';
 
+const URL = require('url');
 const http = require('http');
 const https = require('https');
 const ocsp = require('ocsp');
-const URL = require('./url');
-const Constants = require('../Constants');
-const checkURL = require('./checkURL');
+const hsts = require('./checks/hsts');
+const checks = require('./checks');
 const bodyRedirect = require('./body_redirect');
-const hsts = require('./hsts');
-const log = require('./logger');
-
-const cache = {
-  get(key) {
-    const i = this[key];
-    if (!i || (i && Date.now() - i.time > 172800000)) {
-      return null;
-    }
-
-    return i.data;
-  },
-  set(name, data) {
-    this[name] = { data, time: Date.now() };
-  },
-};
+const { UA } = require('./constants');
 
 async function follow(link, handler, noscan = false) {
-  link = link
-    // Fuck discord
-    .replace(/(https?):\/([^/])/, (_, protocol, x) => `${protocol}://${x}`)
-    // Fuck people who don't understand that `<url>` means just put the url
-    .replace(/(^<|>$)/g, '');
-
   if (!/https?:\/\//.test(link)) {
-    const preloaded = await hsts(link.split(/[/?]/)[0]);
+    const preloaded = await hsts({ domain: link });
     link = `http${preloaded ? 's' : ''}://${link}`;
-  }
-
-  const cacheKey = link + noscan;
-  const cached = cache.get(cacheKey);
-  if (cached) {
-    if (handler) {
-      for (const item of cached.chain) {
-        handler(item);
-      }
-    }
-    return cached;
   }
 
   const ret = {
@@ -65,7 +33,7 @@ async function follow(link, handler, noscan = false) {
   const promise = new Promise((resolve) => {
     (function redirects(url) {
       const options = URL.parse(url);
-      options.headers = { 'User-Agent': Constants.UA };
+      options.headers = { 'User-Agent': UA };
       if (url.startsWith('https')) {
         options.agent = new ocsp.Agent();
       }
@@ -73,7 +41,7 @@ async function follow(link, handler, noscan = false) {
       const request = (url.startsWith('https') ? https : http).get(options);
       const x = async (res) => {
         const error = res instanceof Error ? res : null;
-        const reasons = noscan === true ? [] : await checkURL(url, error);
+        const reasons = noscan === true ? [] : await checks(url);
         handle({
           url,
           reasons,
@@ -116,8 +84,7 @@ async function follow(link, handler, noscan = false) {
   });
 
   promise.then(() => {
-    log('SCAN', link, `safe=${ret.safe}`);
-    cache.set(cacheKey, ret);
+    console.log('SCAN', link, `safe=${ret.safe}`);
   });
 
   return promise;

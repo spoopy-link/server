@@ -1,35 +1,27 @@
 {
   "name": "spoopy.link",
   "version": "1.0.0",
+  "private": "true",
   "description": "",
-  "main": "index.js",
-  "dependencies": {
-    "dotenv": "^4.0.0",
-    "eslint-config-airbnb": "^17.0.0",
-    "eslint-plugin-import": "^2.13.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.10.0",
-    "jsdom": "^11.0.0",
-    "ocsp": "github:spoopy-link/ocsp",
-    "snekfetch": "^3.3.0",
-    "ws": "^3.0.0"
-  },
-  "devDependencies": {
-    "babel-eslint": "^8.2.5",
-    "eslint": "^4.19.1"
-  },
+  "main": "src/index.js",
   "scripts": {
-    "start": "node index.js",
-    "lint": "eslint -c .eslintrc.js ."
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/devsnek/spoopy.link.git"
+    "url": "git+https://github.com/spoopy-link/server.git"
   },
-  "author": "snek <me@gus.host>",
+  "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/devsnek/spoopy.link/issues"
+    "url": "https://github.com/spoopy-link/server/issues"
   },
-  "homepage": "https://github.com/devsnek/spoopy.link#readme"
+  "homepage": "https://github.com/spoopy-link/server#readme",
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "jsdom": "^13.1.0",
+    "node-fetch": "^2.3.0",
+    "ocsp": "^1.2.0",
+    "ws": "^6.1.2"
+  }
 }

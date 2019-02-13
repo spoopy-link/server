@@ -1,6 +1,7 @@
 'use strict';
 
-const request = require('snekfetch');
+const fetch = require('node-fetch');
+const { WOT_KEY } = require('../constants');
 
 const Categories = {
   // NEGATIVE
@@ -43,19 +44,20 @@ const Categories = {
   },
 };
 
-function wot(host) {
-  return request.get(`https://api.mywot.com/0.4/public_link_json2?hosts=${host}/&key=${process.env.WOT_KEY}`)
-    .then((res) => {
-      const body = JSON.parse(res.body)[host];
-
+module.exports = ({ domain }) =>
+  fetch(`https://api.mywot.com/0.4/public_link_json2?hosts=${domain}/&key=${WOT_KEY}`)
+    .then((r) => r.json())
+    .then((body) => {
+      const entry = body[domain];
       const reasons = [];
-      if (body) {
-        if (body[4] && body[4][0] < 70) {
+
+      if (entry) {
+        if (entry[4] && entry[4][0] < 70) {
           reasons.push('CHILD_SAFETY');
         }
 
-        if (body.categores) {
-          reasons.push(...Object.entries(body.categories)
+        if (entry.categores) {
+          reasons.push(...Object.entries(entry.categories)
             .filter(([k]) => k < 300 || (k > 400 && k < 404))
             .reduce((o, [n, v]) => {
               o[Categories[n]] = v; return o;
@@ -68,6 +70,3 @@ function wot(host) {
         reasons,
       };
     });
-}
-
-module.exports = wot;
