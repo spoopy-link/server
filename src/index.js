@@ -42,7 +42,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (API_RE.test(req.url)) {
-      const [, version, noscan, domain] = API_RE.exec(req.url);
+      const [,, noscan, domain] = API_RE.exec(req.url);
       const obj = await follow(domain, undefined, !!noscan);
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(JSON.stringify(obj));
@@ -88,7 +88,7 @@ try {
   fs.unlinkSync(f);
 } catch {} // eslint-disable-line no-empty
 
-server.listen(f);
+server.listen(80);
 
 try {
   fs.chmodSync(f, '777');

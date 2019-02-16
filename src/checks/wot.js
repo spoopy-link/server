@@ -65,8 +65,5 @@ module.exports = ({ domain }) =>
         }
       }
 
-      return {
-        safe: !reasons.length,
-        reasons,
-      };
+      return reasons;
     });

@@ -10,7 +10,7 @@ const bodyRedirect = require('./body_redirect');
 const { UA } = require('./constants');
 
 async function follow(link, handler, noscan = false) {
-  if (!/https?:\/\//.test(link)) {
+  if (!/https?:/.test(link)) {
     const preloaded = await hsts({ domain: link });
     link = `http${preloaded ? 's' : ''}://${link}`;
   }
@@ -52,9 +52,9 @@ async function follow(link, handler, noscan = false) {
           return;
         }
         if ([300, 301, 302, 303, 307].includes(res.statusCode)) {
-          const newURL = /^https?:\/\//i.test(res.headers.location) ?
-            res.headers.location :
-            URL.resolve(url, res.headers.location);
+          const newURL = /^https?:\/\//i.test(res.headers.location)
+            ? res.headers.location
+            : URL.resolve(url, res.headers.location);
           redirects(newURL);
         } else {
           let done = false;

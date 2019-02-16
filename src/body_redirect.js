@@ -66,8 +66,8 @@ module.exports = function bodyRedirect(html, time) {
 
       for (const node of obj.childNodes) {
         if (
-          node.nodeName === 'META' &&
-          node.attributes && Array.prototype.find.call(node.attributes, (a) =>
+          node.nodeName === 'META'
+          && node.attributes && Array.prototype.find.call(node.attributes, (a) =>
             a.name === 'http-equiv' && a.value === 'refresh')
         ) {
           // eslint-disable-next-line consistent-return

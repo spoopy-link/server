@@ -1,6 +1,5 @@
 'use strict';
 
-const URL = require('url');
 const { BLACKLIST } = require('../constants').REASONS;
 
 const blacklist = `
@@ -59,7 +58,6 @@ amazingsexdating.com
 `.split('\n').map(Boolean);
 
 module.exports = ({ domain }) => {
-
   if (blacklist.includes(domain)) {
     return [BLACKLIST];
   }

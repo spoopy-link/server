@@ -1,5 +1,7 @@
 'use strict';
 
+const fs = require('fs').promises;
+const path = require('path');
 const crypto = require('crypto');
 const fetch = require('node-fetch');
 const { JSDOM } = require('jsdom');
@@ -8,7 +10,9 @@ const TimedCache = require('./timed_cache');
 
 const cache = new TimedCache(9e5, async (item) => {
   const url = `${WEB_ROOT}${item.startsWith('/') ? item : PAGES[item]}`;
-  const text = await fetch(url).then((r) => r.text());
+  const text = url.startsWith('http')
+    ? await fetch(url).then((r) => r.text())
+    : await fs.readFile(path.join(process.cwd(), url), 'utf8');
 
   if (!text.startsWith('<!DOCTYPE html>')) {
     return text;
@@ -27,10 +31,12 @@ const cache = new TimedCache(9e5, async (item) => {
 
     node.setAttribute('crossorigin', 'anonymous');
     let src = (node.src || node.href).replace(/^\//, '');
-    if (!/^https?:\/\//.test(src)) {
+    if (!/^https?:/.test(src)) {
       src = `${WEB_ROOT}${src.startsWith('/') ? '' : '/'}${src}`;
     }
-    const t = await fetch(src).then((r) => r.text());
+    const t = src.startsWith('http')
+      ? await fetch(src).then((r) => r.text())
+      : await fs.readFile(path.join(process.cwd(), src), 'utf8');
     const hash = crypto.createHash('sha384').update(t).digest('base64');
     node.setAttribute('integrity', `sha384-${hash}`);
   }));
