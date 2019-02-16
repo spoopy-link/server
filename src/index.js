@@ -88,7 +88,7 @@ try {
   fs.unlinkSync(f);
 } catch {} // eslint-disable-line no-empty
 
-server.listen(80);
+server.listen(f);
 
 try {
   fs.chmodSync(f, '777');
